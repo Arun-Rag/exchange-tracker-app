@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amapola — 3rd Party Exchange &amp; Sales Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+ --brand:#13449b;--brand-d:#0e3578;--brand-l:#2f6fc4;--accent:#29a3e0;
+ --ink:#0f1b2d;--mut:#5b6b82;--soft:#8a99ad;--bg:#eef1f7;--card:#ffffff;--line:#e4e9f2;
+ --open:#b45309;--openbg:#fef3c7;--partial:#1d4ed8;--partialbg:#dbeafe;
+ --closed:#0f7a43;--closedbg:#d8f6e6;--overdue:#c62828;--overduebg:#fde7e7;
+ --noz:#6d28d9;--nozbg:#ede9fe;
+ --shadow:0 1px 2px rgba(16,27,45,.06),0 4px 14px rgba(16,27,45,.05);
+ --shadow-h:0 6px 22px rgba(16,27,45,.13);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:'Inter',system-ui,'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+.app{display:flex;min-height:100vh}
+.side{width:256px;flex-shrink:0;background:linear-gradient(165deg,#0e3578 0%,#13449b 55%,#1551a8 100%);color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 16px;gap:5px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 6px 14px}
+.brand .mk{width:42px;height:42px;border-radius:11px;background:#fff;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.brand .nm{font-weight:800;font-size:16px;letter-spacing:.3px;line-height:1.1}
+.brand .nm small{display:block;font-weight:500;font-size:11px;opacity:.75;margin-top:2px}
+.newbtn{display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:var(--brand);border:none;border-radius:11px;padding:12px;font-weight:700;font-size:13.5px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18);transition:.15s}
+.newbtn:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(0,0,0,.26)}
+.navlbl{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;opacity:.55;margin:15px 8px 4px;font-weight:700}
+.nav{display:flex;flex-direction:column;gap:3px}
+.tab{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:none;color:rgba(255,255,255,.82);padding:9px 12px;border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.13s}
+.tab svg{width:18px;height:18px;opacity:.9;flex-shrink:0}
+.tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab.on{background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 3px 0 0 var(--accent)}
+.tab .cnt{margin-left:auto;font-size:11px;background:rgba(255,255,255,.18);padding:1px 8px;border-radius:20px;font-weight:700;min-width:24px;text-align:center}
+.tab.on .cnt{background:var(--accent)}
+.tab.urgent .cnt{background:#e0463f}
+.side .foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:1px solid rgba(255,255,255,.14)}
+.ghost{display:flex;align-items:center;gap:9px;background:none;border:none;color:rgba(255,255,255,.8);padding:8px 12px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.13s}
+.ghost svg{width:15px;height:15px}
+.ghost:hover{background:rgba(255,255,255,.1);color:#fff}
+.saved{font-size:11px;opacity:.6;padding:2px 12px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(238,241,247,.85);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;padding:16px 28px;border-bottom:1px solid var(--line)}
+.topbar h2{margin:0;font-size:18px;font-weight:800}
+.topbar .sub{font-size:12px;color:var(--mut);margin-top:1px}
+.search{margin-left:auto;position:relative;display:flex;align-items:center}
+.search svg{position:absolute;left:11px;width:16px;height:16px;color:var(--soft)}
+#q{padding:10px 12px 10px 34px;border:1px solid var(--line);border-radius:10px;font-size:13px;background:#fff;width:230px;font-family:inherit}
+#q:focus{outline:none;border-color:var(--brand-l);box-shadow:0 0 0 3px rgba(47,111,196,.13)}
+#cust{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;background:#fff;font-family:inherit;max-width:170px}
+.content{padding:22px 28px 40px;display:flex;flex-direction:column;gap:20px}
+.alertbar{display:none;align-items:center;gap:13px;background:linear-gradient(120deg,#c62828,#e0463f);color:#fff;border-radius:14px;padding:14px 18px;box-shadow:0 6px 18px rgba(198,40,40,.25)}
+.alertbar.on{display:flex}
+.alertbar svg{width:22px;height:22px;flex-shrink:0}
+.alertbar b{font-weight:800}
+.alertbar .ab-btn{margin-left:auto;background:#fff;color:#c62828;border:none;border-radius:9px;padding:9px 15px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.alertbar .ab-x{background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;width:30px;height:30px;font-size:17px;cursor:pointer;flex-shrink:0}
+.hero{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(120deg,#0e3578,#1551a8 60%,#2f6fc4);box-shadow:var(--shadow);min-height:168px;display:flex;align-items:center}
+.hero .txt{padding:26px 30px;color:#fff;max-width:55%;z-index:2}
+.hero h1{margin:0;font-size:23px;font-weight:800}
+.hero p{margin:7px 0 0;font-size:13.5px;opacity:.9;line-height:1.5}
+.hero .plane{position:absolute;right:-12px;bottom:-4px;width:53%;max-width:560px;opacity:.96;pointer-events:none}
+.hero .glow{position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(41,163,224,.5),transparent 70%)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:13px}
+.kpi{background:var(--card);border-radius:15px;padding:15px;box-shadow:var(--shadow);cursor:pointer;transition:.15s;border:1px solid transparent;display:flex;flex-direction:column;gap:9px}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);border-color:var(--line)}
+.kpi .ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center}
+.kpi .ic svg{width:19px;height:19px}
+.kpi .n{font-size:24px;font-weight:800;line-height:1;letter-spacing:-.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .l{font-size:11px;color:var(--mut);font-weight:600}
+.kpi.val .n{font-size:17px}
+.kpi.overdue .ic{background:var(--overduebg);color:var(--overdue)} .kpi.overdue .n{color:var(--overdue)}
+.kpi.open .ic{background:var(--openbg);color:var(--open)}
+.kpi.partial .ic{background:var(--partialbg);color:var(--partial)}
+.kpi.closed .ic{background:var(--closedbg);color:var(--closed)}
+.kpi.noz .ic{background:var(--nozbg);color:var(--noz)}
+.kpi.val .ic{background:#e3eefb;color:var(--brand)}
+.panel{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.panel .ph{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.panel .ph h3{margin:0;font-size:14.5px;font-weight:800}
+.count{margin-left:auto;color:var(--mut);font-size:12.5px;font-weight:600}
+.ph-btn{background:var(--overduebg);color:var(--overdue);border:none;border-radius:9px;padding:8px 13px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit;display:none;align-items:center;gap:6px}
+.ph-btn.on{display:inline-flex}
+.ph-btn svg{width:14px;height:14px}
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{background:#f7f9fc;text-align:left;padding:11px 16px;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 16px;border-bottom:1px solid #f1f4f9;vertical-align:middle;font-size:13px}
+tbody tr{transition:.1s}
+tbody tr:hover td{background:#f6f9ff;cursor:pointer}
+tbody tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:30px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-open{background:var(--openbg);color:var(--open)} .b-closed{background:var(--closedbg);color:var(--closed)}
+.b-partial{background:var(--partialbg);color:var(--partial)} .b-noz{background:var(--nozbg);color:var(--noz)}
+.b-noz::before{display:none}
+.chip-od{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;background:var(--overduebg);color:var(--overdue);white-space:nowrap}
+.mono{font-family:'SF Mono','Consolas',monospace;font-size:12px;font-weight:600}
+.dim{color:var(--soft)}
+.modal{position:fixed;inset:0;background:rgba(14,27,45,.55);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow:auto;z-index:60}
+.modal.on{display:flex;animation:fade .18s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.card{background:#fff;border-radius:18px;max-width:850px;width:100%;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.4);animation:pop .2s ease}
+@keyframes pop{from{transform:translateY(12px);opacity:.6}to{transform:none;opacity:1}}
+.card .hd{background:linear-gradient(120deg,#0e3578,#1551a8);color:#fff;padding:17px 24px;display:flex;align-items:center;gap:12px}
+.card .hd h2{margin:0;font-size:17px;font-weight:700} .card .hd .x{margin-left:auto;cursor:pointer;font-size:25px;opacity:.85;line-height:1}
+.card .hd .x:hover{opacity:1}
+.card .bd{padding:20px 24px;max-height:75vh;overflow:auto}
+.sec{margin:18px 0 11px;font-size:11px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;display:flex;align-items:center;gap:8px}
+.sec::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.f{display:flex;flex-direction:column;gap:5px}
+.f label{font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);font-weight:700}
+.f .vv{font-weight:600;padding:3px 0;font-size:13.5px}
+.f input,.f select,.f textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-family:inherit;font-size:13px;width:100%;background:#fff;transition:.13s}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--brand-l);box-shadow:0 0 0 3px rgba(47,111,196,.13)}
+.f textarea{min-height:62px;resize:vertical}
+.viewbox{white-space:pre-wrap;background:#f7f9fc;border:1px solid var(--line);border-radius:11px;padding:12px;min-height:40px;font-size:13px}
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--brand);color:#fff;border:none;padding:11px 17px;border-radius:11px;font-weight:700;cursor:pointer;font-size:13px;font-family:inherit;transition:.13s}
+.btn:hover{background:var(--brand-d)}
+.btn.gray{background:#eef1f7;color:#3a4862}.btn.gray:hover{background:#e0e6f0}
+.btn.red{background:#fde7e7;color:#c62828}.btn.red:hover{background:#fbd5d5}
+.btn.green{background:#0f7a43}.btn.green:hover{background:#0c6537}
+.btnrow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
+.btnrow .spacer{flex:1}
+.custrow{display:grid;grid-template-columns:1.1fr 1.5fr auto;gap:8px;align-items:center;margin-bottom:7px}
+.custrow input{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-family:inherit;font-size:13px}
+.custrow .rm{background:#fde7e7;color:#c62828;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:#0f1b2d;color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;transition:.25s;z-index:99;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{padding:48px 20px;text-align:center;color:var(--soft)}
+.empty svg{width:46px;height:46px;opacity:.4;margin-bottom:8px}
+.menubtn{display:none}
+@media(max-width:1240px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1080px){.hero .txt{max-width:62%}}
+@media(max-width:860px){
+ .side{position:fixed;left:0;top:0;z-index:80;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.3)}
+ .side.open{transform:none}
+ .menubtn{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid var(--line);cursor:pointer}
+ .kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}
+ .hero .plane{opacity:.22}.hero .txt{max-width:100%}.hidem{display:none}.custrow{grid-template-columns:1fr 1fr auto}
+ #q{width:140px}
+}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:11px}
+.unitcard{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:11px;background:#fbfcfe}
+.unithd{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.unithd b{color:var(--brand);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.unitcard .rm{background:#fde7e7;color:#c62828;border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:16px}
+.addunit{margin-top:2px}
+.uview{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;background:#fbfcfe}
+.uview .uh{font-weight:800;color:var(--brand);font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.pill-units{display:inline-block;background:var(--partialbg);color:var(--partial);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700}
+@media(max-width:860px){.grid4{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<div class="app">
+ <aside class="side" id="side">
+  <div class="brand"><div class="mk"><svg viewBox="0 0 24 24" width="26" height="26" fill="#13449b"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L11 19v-5.5z"/></svg></div><div class="nm">AMAPOLA<small>3rd Party Tracker</small></div></div>
+  <button class="newbtn" onclick="openEdit(null)">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" width="17" height="17"><path d="M12 5v14M5 12h14"/></svg>New exchange</button>
+  <div class="navlbl">Views</div>
+  <nav class="nav" id="tabs">
+   <button class="tab on" data-f="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>All exchanges</button>
+   <button class="tab urgent" data-f="overdue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>Overdue (30d+)<span class="cnt" id="cnt-overdue"></span></button>
+   <button class="tab" data-f="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Open<span class="cnt" id="cnt-open"></span></button>
+   <button class="tab" data-f="partial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9h9"/></svg>Partial<span class="cnt" id="cnt-partial"></span></button>
+   <button class="tab" data-f="closed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Closed<span class="cnt" id="cnt-closed"></span></button>
+   <button class="tab" data-f="noz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-3 7h5l-3 13 9-13h-6l3-7z"/></svg>Nozzle claims<span class="cnt" id="cnt-noz"></span></button>
+  </nav>
+  <div class="foot">
+   <button class="ghost" onclick="openCustomers()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Customers</button>
+   <button class="ghost" onclick="backup()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Backup data</button>
+   <button class="ghost" onclick="document.getElementById('imp').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 8l5-5 5 5M12 3v12"/></svg>Restore</button>
+   <input type="file" id="imp" accept=".json" style="display:none" onchange="restore(event)">
+   <button class="ghost" onclick="openSettings()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+   <div class="saved" id="saved"></div>
+  </div>
+ </aside>
+ <div class="main">
+  <div class="topbar">
+   <div class="menubtn" onclick="document.getElementById('side').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke="#13449b" stroke-width="2.2" stroke-linecap="round" width="20" height="20"><path d="M3 12h18M3 6h18M3 18h18"/></svg></div>
+   <div><h2>Exchange Register</h2><div class="sub">Fokker 50 parts · outright &amp; exchange sales</div></div>
+   <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="q" placeholder="Search P/N, S/N, customer, RO, SO…"></div>
+   <select id="cust"><option value="">All customers</option></select>
+  </div>
+  <div class="content">
+   <div class="alertbar" id="alertBar"></div>
+   <div class="hero">
+    <div class="glow"></div>
+    <div class="txt"><h1>3rd Party Exchange &amp; Sales Tracker</h1>
+     <p>Track every exchange end-to-end — what you supplied, the core due back, repair orders, partial returns and nozzle claims — in one live register.</p></div>
+    <div class="plane"><svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#2f6fc4"/><stop offset="1" stop-color="#7fb8ef"/>
+ </linearGradient>
+ <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9eef5"/>
+ </linearGradient>
+</defs>
+
+<!-- horizontal stabilizer (far) -->
+<path d="M 545,116 L 612,104 L 620,110 L 548,128 Z" fill="#d7dee8"/>
+<!-- vertical tail fin -->
+<path d="M 498,100 L 556,26 C 559,22 566,23 567,29 L 575,104 Z" fill="#13449b"/>
+<path d="M 556,26 C 559,22 566,23 567,29 L 569,46 L 545,52 Z" fill="#29a3e0"/>
+
+<!-- fuselage -->
+<path d="M 66,132
+ C 66,112 96,103 128,102
+ L 452,102
+ C 506,102 540,110 572,120
+ C 580,122 580,128 572,131
+ C 540,141 506,150 452,150
+ L 128,150
+ C 96,149 66,152 66,132 Z" fill="url(#body)" stroke="#cfd8e6" stroke-width="1.5"/>
+
+<!-- nose tip accent -->
+<path d="M 66,132 C 66,120 76,110 92,106 L 92,158 C 76,154 66,144 66,132 Z" fill="#dfe6f0"/>
+
+<!-- blue cheatline / billboard sweep -->
+<path d="M 150,150 L 452,150 C 470,150 488,148 506,145 L 470,138 L 150,138 Z" fill="#13449b"/>
+<path d="M 150,138 L 470,138 L 452,132 L 150,132 Z" fill="#29a3e0" opacity="0.9"/>
+
+<!-- AMAPOLA wordmark -->
+<text x="210" y="127" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="800" fill="#13449b" letter-spacing="2">AMAPOLA</text>
+
+<!-- cockpit windows -->
+<path d="M 96,112 C 104,107 116,106 126,107 L 122,118 L 98,118 Z" fill="#1f2b3d"/>
+<!-- cabin windows -->
+<g fill="#2a3a52">
+ <circle cx="150" cy="115" r="3.4"/><circle cx="166" cy="115" r="3.4"/><circle cx="182" cy="115" r="3.4"/>
+ <circle cx="198" cy="115" r="3.4"/><circle cx="334" cy="115" r="3.4"/><circle cx="350" cy="115" r="3.4"/>
+ <circle cx="366" cy="115" r="3.4"/><circle cx="382" cy="115" r="3.4"/><circle cx="398" cy="115" r="3.4"/>
+ <circle cx="414" cy="115" r="3.4"/><circle cx="430" cy="115" r="3.4"/>
+</g>
+
+<!-- wing (low, swept back) -->
+<path d="M 250,146 L 322,146 L 372,182 L 300,182 Z" fill="#c3cedd"/>
+<!-- engine nacelle -->
+<path d="M 232,150 C 232,142 240,138 262,138 L 318,138 C 326,138 330,143 330,150 C 330,158 326,162 318,162 L 250,162 C 238,162 232,158 232,150 Z" fill="#eef2f7" stroke="#cfd8e6" stroke-width="1"/>
+<ellipse cx="318" cy="150" rx="6" ry="9" fill="#9fb0c6"/>
+<!-- spinner + propeller -->
+<g transform="translate(232,150)">
+ <g stroke="#1f2b3d" stroke-width="3.4" stroke-linecap="round" opacity="0.85">
+  <line x1="0" y1="0" x2="0" y2="-30"/><line x1="0" y1="0" x2="0" y2="30"/>
+  <line x1="0" y1="0" x2="-22" y2="-20"/><line x1="0" y1="0" x2="22" y2="20"/>
+  <line x1="0" y1="0" x2="-22" y2="20"/><line x1="0" y1="0" x2="22" y2="-20"/>
+ </g>
+ <circle cx="0" cy="0" r="6.5" fill="#13449b"/>
+</g>
+
+<!-- landing gear -->
+<g stroke="#3a4862" stroke-width="3" fill="#27324a">
+ <line x1="110" y1="150" x2="110" y2="172"/><circle cx="110" cy="176" r="6"/>
+ <line x1="300" y1="162" x2="300" y2="176"/><circle cx="300" cy="180" r="7"/>
+ <line x1="288" y1="162" x2="288" y2="176"/><circle cx="288" cy="180" r="7"/>
+</g>
+</svg></div>
+   </div>
+   <div class="kpis" id="kpis"></div>
+   <div class="panel">
+    <div class="ph"><h3 id="panelTitle">All exchanges</h3>
+     <button class="ph-btn" id="bulkBtn" onclick="startOverdueQueue()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Send overdue reminders</button>
+     <div class="count" id="count"></div></div>
+    <div class="tbl-scroll"><table><thead><tr>
+     <th>Status</th><th>Customer</th><th>Sales Order</th><th>Units</th>
+     <th class="hidem">Items (P/N)</th><th class="hidem">RO / Shop</th><th>Sales $</th><th>Noz</th>
+    </tr></thead><tbody id="rows"></tbody></table></div>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="modal" id="modal"><div class="card">
+ <div class="hd"><h2 id="mTitle"></h2><span class="x" onclick="closeM()">&times;</span></div>
+ <div class="bd" id="mBody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const SEED = [{"ID":1,"Date":"08/13/24","Customer":"Advantage","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"WE CLOSED THE REPAIR SEVICE WITH THEM DUE TO ISSUES","CorePN":"3244858-24","CoreSN":"B70014N","ExchangeStatus":"RO Assigned","RONumber":"RO659637","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":17416.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"17416$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":2,"Date":"08/13/24","Customer":"Advantage","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"WE CLOSED THE REPAIR SEVICE WITH THEM DUE TO ISSUES","CorePN":"3244858-21","CoreSN":"B15404V","ExchangeStatus":"RO Assigned","RONumber":"RO659638","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":31750.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"31750$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":3,"Date":"08/13/24","Customer":"Advantage","SoldPN":"597311","SoldSN":"1RJ01465","SalesOrderNo":"SO52923","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"1 Nozzle replaced. Required to claim with Advantage.","CorePN":"597311","CoreSN":"1RJ01465","ExchangeStatus":"RO Assigned","RONumber":"RO660263","RepairShop":"Action Aero","AssyStatus":"ASSY COMPLETED from Advantage","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"Q.P $1325 FD $410. 1 EA FAILURE NOZZEL CLAIM WT ADVANTAGE.","FailedNozzles":1,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":4,"Date":"08/13/24","Customer":"Advantage","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"4 Nozzle replaced; Required to claim with Advantage","CorePN":"597311","CoreSN":"618A4285","ExchangeStatus":"RO Assigned","RONumber":"RO660264","RepairShop":"Action Aero","AssyStatus":"ASSY COMPLETED from Advantage","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"Q. P $1325 + $410  4 EA FAIL NOZZLE CLAIM ADVANTAGE","FailedNozzles":4,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":5,"Date":"08/13/24","Customer":"Advantage","SoldPN":"597311","SoldSN":"10J00287","SalesOrderNo":"SO52923","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Flow Devider Replaced;Required to claim with Advantage","CorePN":"597311","CoreSN":"10J00287","ExchangeStatus":"RO Assigned","RONumber":"RO660279","RepairShop":"Action Aero","AssyStatus":"ASSY COMPLETED from Advantage","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"QP $1325 + FD.$1000 . (FAILURE NOZZLE CLAIM WT ADVANTAGE)","FailedNozzles":1,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":6,"Date":"08/13/24","Customer":"Advantage","SoldPN":"","SoldSN":"597311","SalesOrderNo":"618A8107","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"WE CLOSED THE REPAIR SEVICE WITH THEM DUE TO ISSUES","CorePN":"597311","CoreSN":"618A8107","ExchangeStatus":"Received - awaiting RO","RONumber":"","RepairShop":"Action Aero","AssyStatus":"FLOW DEVIDER MISSING from Advantage","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"","Comment":"","OrderStatus":"Closed"},{"ID":7,"Date":"08/13/24","Customer":"Amapola","SoldPN":"5009982E","SoldSN":"5256","SalesOrderNo":"SO52914","SalesPrice":14700.0,"SalesCurrency":"USD","SalesPriceNote":"14700$","CorePN":"5009982E","CoreSN":"5256","ExchangeStatus":"RO Assigned","RONumber":"RO659977","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":375.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"375$","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Closed"},{"ID":8,"Date":"02/27/25","Customer":"BusyBee","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244873-5","CoreSN":"B15590V","ExchangeStatus":"RO Assigned","RONumber":"RO660979","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":31617.8,"RepairQuoteCurrency":"USD","RepairQuoteNote":"31617.80 $","FailedNozzles":0,"OwnershipChanged":"BusyBee","Comment":"Faulty Throttle shaft- $21 k","OrderStatus":"Open"},{"ID":9,"Date":"04/25/25","Customer":"BusyBee","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":61500.0,"SalesCurrency":"USD","SalesPriceNote":"61500 $","CorePN":"737852A","CoreSN":"CSD0192GEN0205","ExchangeStatus":"RO Assigned","RONumber":"RO660040","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":41277.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"41277$","FailedNozzles":0,"OwnershipChanged":"BusyBee","Comment":"APPROVED","OrderStatus":"Closed"},{"ID":10,"Date":"04/25/25","Customer":"BusyBee","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":59500.0,"SalesCurrency":"USD","SalesPriceNote":"59500 $","CorePN":"737852A","CoreSN":"Thomas Carlborg","ExchangeStatus":"RO Assigned","RONumber":"RO660191","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":39686.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"39686$","FailedNozzles":0,"OwnershipChanged":"BusyBee","Comment":"APPROVED","OrderStatus":"Closed"},{"ID":11,"Date":"08/13/24","Customer":"I-Fly","SoldPN":"5009980E","SoldSN":"1199","SalesOrderNo":"SO52902","SalesPrice":15000.0,"SalesCurrency":"USD","SalesPriceNote":"15000$","CorePN":"5009980D","CoreSN":"1036X","ExchangeStatus":"RO Assigned","RONumber":"RO660278","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"BER $14813.28. SOLD TO A.A  FOR $500 REF ORDER P19419.","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":12,"Date":"08/13/24","Customer":"I-Fly","SoldPN":"737852A","SoldSN":"CSD0611GEN0607","SalesOrderNo":"SO52881","SalesPrice":45000.0,"SalesCurrency":"USD","SalesPriceNote":"45000$","CorePN":"73785A","CoreSN":"CSD0232GEN0241","ExchangeStatus":"RO Assigned","RONumber":"RO660272","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"No price Quoted","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":13,"Date":"08/13/24","Customer":"I-Fly","SoldPN":"3244858-24","SoldSN":"B15421T","SalesOrderNo":"SO52902","SalesPrice":45000.0,"SalesCurrency":"USD","SalesPriceNote":"45000$","CorePN":"3244858-24","CoreSN":"B15303V","ExchangeStatus":"RO Assigned","RONumber":"RO660890","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":14,"Date":"08/13/24","Customer":"I-Fly","SoldPN":"PO31182","SoldSN":"","SalesOrderNo":"SO52902","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"5009980D","CoreSN":"1104","ExchangeStatus":"RO Assigned","RONumber":"RO660393","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":1075.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"1075$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":15,"Date":"08/13/24","Customer":"I-Fly","SoldPN":"PO31182","SoldSN":"","SalesOrderNo":"SO52902","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244858-24","CoreSN":"B15303V","ExchangeStatus":"RO Assigned","RONumber":"RO660890","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":16,"Date":"05/29/24","Customer":"Jetways","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"BER quote+Evaluation fee+Transport Fee+Manhour+ Extra","CorePN":"737852A","CoreSN":"CSD0407GEN0308","ExchangeStatus":"RO Assigned","RONumber":"RO660224","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"REJECTED","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"DONOR (BER)","OrderStatus":"Open"},{"ID":17,"Date":"05/29/24","Customer":"Jetways","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"BER quote+Evaluation fee+Transport Fee+Manhour+ Extra","CorePN":"737852A","CoreSN":"CSD0146GEN0336","ExchangeStatus":"RO Assigned","RONumber":"RO660225","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"REJECTED","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"DONOR (BER)","OrderStatus":"Open"},{"ID":18,"Date":"10/03/24","Customer":"Jetways","SoldPN":"42011","SoldSN":"BI35","SalesOrderNo":"","SalesPrice":3500.0,"SalesCurrency":"USD","SalesPriceNote":"3500 $","CorePN":"42011","CoreSN":"BI35","ExchangeStatus":"RO Assigned","RONumber":"RO660510","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"BER","OrderStatus":"Open"},{"ID":19,"Date":"10/03/24","Customer":"Jetways","SoldPN":"42011","SoldSN":"AH-51630","SalesOrderNo":"","SalesPrice":11000.0,"SalesCurrency":"USD","SalesPriceNote":"11000 $","CorePN":"42011","CoreSN":"AH-51630","ExchangeStatus":"RO Assigned","RONumber":"RO660511","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":2507.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"2507$","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"","OrderStatus":"Open"},{"ID":20,"Date":"10/10/24","Customer":"Jetways","SoldPN":"5009980D","SoldSN":"1641","SalesOrderNo":"","SalesPrice":3500.0,"SalesCurrency":"USD","SalesPriceNote":"3500 $","CorePN":"5009980D","CoreSN":"1641","ExchangeStatus":"RO Assigned","RONumber":"RO660392","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"BER","OrderStatus":"Open"},{"ID":21,"Date":"04/08/25","Customer":"Jetways","SoldPN":"737852A","SoldSN":"CSD0358GEN0561","SalesOrderNo":"","SalesPrice":63000.0,"SalesCurrency":"USD","SalesPriceNote":"63000 $","CorePN":"737852A","CoreSN":"CSD0358GEN0561","ExchangeStatus":"RO Assigned","RONumber":"RO660404","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":31148.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"31148 $","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"12 qty of piston replaced","OrderStatus":"Open"},{"ID":22,"Date":"04/08/25","Customer":"Jetways","SoldPN":"737852A","SoldSN":"CSD0206GEN0146","SalesOrderNo":"SO52980","SalesPrice":72000.0,"SalesCurrency":"USD","SalesPriceNote":"72000 $","CorePN":"737852A","CoreSN":"CSD0206GEN0146","ExchangeStatus":"RO Assigned","RONumber":"RO660405","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":42645.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"42645 $","FailedNozzles":0,"OwnershipChanged":"Aerojet","Comment":"2 qty of piston required","OrderStatus":"Closed"},{"ID":23,"Date":"04/08/25","Customer":"Jetways","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"737852A","CoreSN":"CSD0308GEN0311","ExchangeStatus":"RO Assigned","RONumber":"RO660406","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":44688.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"44688 $","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"","OrderStatus":"Open"},{"ID":24,"Date":"04/08/25","Customer":"Jetways","SoldPN":"737852A","SoldSN":"CSD0561GEN0431","SalesOrderNo":"","SalesPrice":67425.0,"SalesCurrency":"USD","SalesPriceNote":"67425$ shared the invoice","CorePN":"737852A","CoreSN":"CSD0561GEN0431","ExchangeStatus":"RO Assigned","RONumber":"RO660407","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":40302.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"40302 $","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"2 qty of piston required","OrderStatus":"Open"},{"ID":25,"Date":"04/08/25","Customer":"Jetways","SoldPN":"737852A","SoldSN":"CSD0572GEN0575","SalesOrderNo":"","SalesPrice":68000.0,"SalesCurrency":"USD","SalesPriceNote":"68000$ shared the invoice","CorePN":"737852A","CoreSN":"CSD0572GEN0575","ExchangeStatus":"RO Assigned","RONumber":"RO660408","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":42573.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"42573 $","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"18 qty of piston replaced","OrderStatus":"Open"},{"ID":26,"Date":"08/13/24","Customer":"Skyward Express","SoldPN":"5009982D","SoldSN":"5085","SalesOrderNo":"SO52914","SalesPrice":9700.0,"SalesCurrency":"USD","SalesPriceNote":"9700$","CorePN":"5009982D","CoreSN":"5085","ExchangeStatus":"RO Assigned","RONumber":"RO660135","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":7224.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"722,4$","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Closed"},{"ID":27,"Date":"08/13/24","Customer":"Skyward Express","SoldPN":"3244873-7","SoldSN":"B70041N","SalesOrderNo":"SO52914","SalesPrice":29500.0,"SalesCurrency":"USD","SalesPriceNote":"29500$","CorePN":"3244858-24","CoreSN":"B70041N","ExchangeStatus":"RO Assigned","RONumber":"RO659643","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":17416.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"17416$","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Closed"},{"ID":28,"Date":"05/13/24","Customer":"Skyward Express","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244858-21","CoreSN":"B15321V","ExchangeStatus":"RO Assigned","RONumber":"RO660140","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Open"},{"ID":29,"Date":"05/13/24","Customer":"Skyward Express","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244858-22","CoreSN":"B15354N","ExchangeStatus":"RO Assigned","RONumber":"RO660142","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Open"},{"ID":30,"Date":"05/13/24","Customer":"Skyward Express","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244873-5","CoreSN":"B15604V","ExchangeStatus":"RO Assigned","RONumber":"RO660137","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":2800.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"2800$","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Open"},{"ID":31,"Date":"08/13/24","Customer":"Skyward Express","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"We created a SO52902; Failure on installation. Bring back to us.","CorePN":"3244858-24","CoreSN":"B15421T","ExchangeStatus":"RO Assigned","RONumber":"RO659641","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":15120.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"15120$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":32,"Date":"08/13/24","Customer":"Skyward Express","SoldPN":"3244858-26","SoldSN":"B15191V","SalesOrderNo":"SO52914","SalesPrice":40800.0,"SalesCurrency":"USD","SalesPriceNote":"40800$","CorePN":"3244858-26","CoreSN":"B15191V","ExchangeStatus":"RO Assigned","RONumber":"RO659642","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":30800.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"30800$","FailedNozzles":0,"OwnershipChanged":"Skyward Express","Comment":"","OrderStatus":"Closed"},{"ID":33,"Date":"08/13/24","Customer":"Tanzania","SoldPN":"3244858-26","SoldSN":"B15191V","SalesOrderNo":"SO52933","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244858-26","CoreSN":"B15369V","ExchangeStatus":"RO Assigned","RONumber":"RO660107","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":2800.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"2800$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"STEPPER MOTOR FROM DONOR 660220.","OrderStatus":"Closed"},{"ID":34,"Date":"08/13/24","Customer":"Tanzania","SoldPN":"5007996-1","SoldSN":"MAY90-0636","SalesOrderNo":"SO52922","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"15,236.00","CorePN":"5007996-1","CoreSN":"MAY90-0636","ExchangeStatus":"RO Assigned","RONumber":"RO660122","RepairShop":"Baltic","AssyStatus":"","RepairQuotePrice":11722.82,"RepairQuoteCurrency":"USD","RepairQuoteNote":"11722.82$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":35,"Date":"08/13/24","Customer":"Tanzania","SoldPN":"5007996-1","SoldSN":"APR91-0777","SalesOrderNo":"SO52922","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"22,970.00","CorePN":"5007996-1","CoreSN":"APR91-0777","ExchangeStatus":"RO Assigned","RONumber":"RO660123","RepairShop":"Baltic","AssyStatus":"","RepairQuotePrice":17699.36,"RepairQuoteCurrency":"USD","RepairQuoteNote":"17699.36$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":36,"Date":"08/13/24","Customer":"Tanzania","SoldPN":"5007996-1","SoldSN":"APR91-0776","SalesOrderNo":"SO52922","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"16,430.00","CorePN":"5007996-1","CoreSN":"APR91-0776","ExchangeStatus":"RO Assigned","RONumber":"RO660124","RepairShop":"Baltic","AssyStatus":"","RepairQuotePrice":12638.41,"RepairQuoteCurrency":"USD","RepairQuoteNote":"12638.41$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":37,"Date":"08/13/24","Customer":"Tanzania","SoldPN":"737852A","SoldSN":"CSD0623GEN0680","SalesOrderNo":"SO52933","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"737852A","CoreSN":"CSD0623GEN0680","ExchangeStatus":"RO Assigned","RONumber":"RO660092","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":19457.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"19457$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":38,"Date":"08/13/24","Customer":"Sky Cap","SoldPN":"597311","SoldSN":"1XS10467","SalesOrderNo":"SO52911","SalesPrice":1200.0,"SalesCurrency":"USD","SalesPriceNote":"1200$","CorePN":"597311","CoreSN":"1MA08524","ExchangeStatus":"RO Assigned","RONumber":"RO660574","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":2610.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"2610$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":39,"Date":"03/25/25","Customer":"BusyBee","SoldPN":"597311","SoldSN":"G0346","SalesOrderNo":"SO52940","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Ex  3750+ 1200 = 4950 $  (INVOICE FOR 1200 $)","CorePN":"597311","CoreSN":"1YJ00688","ExchangeStatus":"RO Assigned","RONumber":"RO660904","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"435$ FD+ 1430$ = 1865$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"Complete Kit","OrderStatus":"Closed"},{"ID":40,"Date":"03/25/25","Customer":"BusyBee","SoldPN":"597311","SoldSN":"1966","SalesOrderNo":"SO52940","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Ex  3750+ 1200 +1500 =6450 $  (Invoice for 2700 $)","CorePN":"597311","CoreSN":"PHV0119","ExchangeStatus":"RO Assigned","RONumber":"RO660908","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":1430.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"1430$","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"Kit without Flow Devider + 1 N FAIL","OrderStatus":"Closed"},{"ID":41,"Date":"08/13/24","Customer":"Aerosum","SoldPN":"42011","SoldSN":"DL49","SalesOrderNo":"SO52941","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Flate Rate Exchange","CorePN":"42011","CoreSN":"AQ32","ExchangeStatus":"RO Assigned","RONumber":"RO660852","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"Flate Rate Exchange","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":42,"Date":"08/13/24","Customer":"Aerosum","SoldPN":"42011","SoldSN":"AB25","SalesOrderNo":"SO52936","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Flate Rate Exchange","CorePN":"42011","CoreSN":"FH40","ExchangeStatus":"RO Assigned","RONumber":"RO660853","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"Flate Rate Exchange","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":43,"Date":"08/13/24","Customer":"Aerosum","SoldPN":"666000143","SoldSN":"1397","SalesOrderNo":"SO52927","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"666000143","CoreSN":"83-88","ExchangeStatus":"RO Assigned","RONumber":"RO660855","RepairShop":"Amapola","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":44,"Date":"02/25/25","Customer":"CC&Sons","SoldPN":"597311","SoldSN":"PHM0140","SalesOrderNo":"SO52954","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Exchange charge 3750+ fauly nozzle need to claim","CorePN":"597311","CoreSN":"1XJ00107","ExchangeStatus":"RO Assigned","RONumber":"RO660909","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":435.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"435$+","FailedNozzles":1,"OwnershipChanged":"Amapola","Comment":"Complete Kit","OrderStatus":"Closed"},{"ID":45,"Date":"02/05/25","Customer":"CC&Sons","SoldPN":"597311","SoldSN":"G0963","SalesOrderNo":"SO52954","SalesPrice":1200.0,"SalesCurrency":"USD","SalesPriceNote":"3750 + 1200 $","CorePN":"597311","CoreSN":"1RV07547","ExchangeStatus":"RO Assigned","RONumber":"RO660910","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":435.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"435$+ 1430 (1 nozzle fail)","FailedNozzles":1,"OwnershipChanged":"Amapola","Comment":"Complete Kit","OrderStatus":"Closed"},{"ID":46,"Date":"08/13/24","Customer":"Aerosum","SoldPN":"666000143","SoldSN":"1397","SalesOrderNo":"SO52927","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Flate Rate Exchange","CorePN":"666000143","CoreSN":"83-88","ExchangeStatus":"RO Assigned","RONumber":"RO660855","RepairShop":"Inhouse","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"Flate Rate Exchange","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":47,"Date":"02/25/25","Customer":"Jetways","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244858-24","CoreSN":"B15441V","ExchangeStatus":"RO Assigned","RONumber":"RO660899","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"UNDER INSPECTION","FailedNozzles":0,"OwnershipChanged":"Jetways","Comment":"","OrderStatus":"Open"},{"ID":48,"Date":"11/13/24","Customer":"Sky Cap","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"791809-4-004","CoreSN":"86112247","ExchangeStatus":"RO Assigned","RONumber":"RO660566","RepairShop":"Collin","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"3523.21\u20ac","FailedNozzles":0,"OwnershipChanged":"Sky Cap","Comment":"BER","OrderStatus":"Open"},{"ID":49,"Date":"10/30/24","Customer":"Sky Cap","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"809575-2-004","CoreSN":"0950-151","ExchangeStatus":"RO Assigned","RONumber":"RO660603","RepairShop":"Collin","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"3523.21\u20ac","FailedNozzles":0,"OwnershipChanged":"Sky Cap","Comment":"BER","OrderStatus":"Open"},{"ID":50,"Date":"04/08/25","Customer":"BusyBee","SoldPN":"170BC101-3","SoldSN":"593","SalesOrderNo":"SO52967","SalesPrice":3500.0,"SalesCurrency":"USD","SalesPriceNote":"3500$","CorePN":"170BC101-3","CoreSN":"291","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":51,"Date":"04/08/25","Customer":"BusyBee","SoldPN":"6607-1-87A","SoldSN":"X72544X","SalesOrderNo":"SO52967","SalesPrice":1800.0,"SalesCurrency":"USD","SalesPriceNote":"1800$","CorePN":"6607-1-87A","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":52,"Date":"04/08/25","Customer":"BusyBee","SoldPN":"645110-1","SoldSN":"125-138","SalesOrderNo":"SO52967","SalesPrice":3500.0,"SalesCurrency":"USD","SalesPriceNote":"3500$","CorePN":"645110-1","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":53,"Date":"04/28/25","Customer":"Newworld Choices","SoldPN":"1C27-5","SoldSN":"10AE-169","SalesOrderNo":"SO52969","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Inoice shared;valid for 30 days","CorePN":"1C27-5","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":54,"Date":"09/04/25","Customer":"Sky Cap","SoldPN":"785804-3","SoldSN":"","SalesOrderNo":"SO52993","SalesPrice":6000.0,"SalesCurrency":"USD","SalesPriceNote":"6000$","CorePN":"785804-3","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":55,"Date":"09/04/25","Customer":"Sky Cap","SoldPN":"SLZ7011A","SoldSN":"HW1333C","SalesOrderNo":"SO52993","SalesPrice":3000.0,"SalesCurrency":"USD","SalesPriceNote":"3000$","CorePN":"SLZ7011A","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":56,"Date":"09/04/25","Customer":"Sky Cap","SoldPN":"071-01503-0201","SoldSN":"22553","SalesOrderNo":"SO52993","SalesPrice":3000.0,"SalesCurrency":"USD","SalesPriceNote":"3000$","CorePN":"071-01503-0201","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":57,"Date":"08/14/25","Customer":"Aerojet","SoldPN":"8095351-1004","SoldSN":"3103","SalesOrderNo":"SO52984","SalesPrice":11000.0,"SalesCurrency":"USD","SalesPriceNote":"11,000 $ Invoice shared with customer","CorePN":"8095351-1004","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":58,"Date":"05/09/25","Customer":"Kush","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"785720-7","CoreSN":"910649","ExchangeStatus":"RO Assigned","RONumber":"RO661212","RepairShop":"Global","AssyStatus":"shop price 26476 $","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Kush","Comment":"","OrderStatus":"Open"},{"ID":59,"Date":"06/03/25","Customer":"Newworld Choices","SoldPN":"737852A","SoldSN":"0532-0534","SalesOrderNo":"SO52974","SalesPrice":79500.0,"SalesCurrency":"USD","SalesPriceNote":"79500 $","CorePN":"737852A","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":60,"Date":"07/25/25","Customer":"Amapola","SoldPN":"737852A","SoldSN":"CSD0206GEN0146","SalesOrderNo":"SO52980","SalesPrice":72000.0,"SalesCurrency":"USD","SalesPriceNote":"72000 $","CorePN":"737852A","CoreSN":"CSD0485GEN0489","ExchangeStatus":"RO Assigned","RONumber":"RO661513","RepairShop":"Global","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Aerojet","Comment":"","OrderStatus":"Closed"},{"ID":61,"Date":"06/05/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":16000.0,"SalesCurrency":"USD","SalesPriceNote":"16000$","CorePN":"5007996-1","CoreSN":"MAY90-0634","ExchangeStatus":"RO Assigned","RONumber":"RO661274","RepairShop":"Baltic","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":62,"Date":"06/05/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":16000.0,"SalesCurrency":"USD","SalesPriceNote":"16000$","CorePN":"5007996-1","CoreSN":"OCT96-1239","ExchangeStatus":"RO Assigned","RONumber":"RO661272","RepairShop":"Baltic","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":63,"Date":"05/14/25","Customer":"CC&Sons","SoldPN":"170BC101-3","SoldSN":"202","SalesOrderNo":"SO52972","SalesPrice":5000.0,"SalesCurrency":"USD","SalesPriceNote":"5000 $","CorePN":"170BC101-3","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":64,"Date":"06/05/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":19000.0,"SalesCurrency":"USD","SalesPriceNote":"19000$","CorePN":"5007996-1","CoreSN":"NOV99-1270","ExchangeStatus":"RO Assigned","RONumber":"RO661270","RepairShop":"Baltic","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":65,"Date":"06/02/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"3750+ FD 1500+ 5*1200 NOZZLE = 11250","CorePN":"597311","CoreSN":"1VR00126","ExchangeStatus":"RO Assigned","RONumber":"RO661252","RepairShop":"Action Aero","AssyStatus":"5 NOZZLE + F.D FAIL","RepairQuotePrice":1430.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"1430$","FailedNozzles":5,"OwnershipChanged":"Amapola","Comment":"WITHOUT F.D","OrderStatus":"Closed"},{"ID":66,"Date":"05/13/25","Customer":"Kush","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"3244873-6","CoreSN":"B15591V","ExchangeStatus":"RO Assigned","RONumber":"RO661223","RepairShop":"Action Aero","AssyStatus":"Shop price 16104.70 $","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Kush","Comment":"","OrderStatus":"Open"},{"ID":67,"Date":"05/09/25","Customer":"Kush","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"785720-7","CoreSN":"881120","ExchangeStatus":"RO Assigned","RONumber":"RO661214","RepairShop":"Global","AssyStatus":"shop price 26476 $","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Kush","Comment":"","OrderStatus":"Open"},{"ID":68,"Date":"05/09/25","Customer":"Kush","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"785720-7","CoreSN":"901035","ExchangeStatus":"RO Assigned","RONumber":"RO661213","RepairShop":"Global","AssyStatus":"shop price 25054 $","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Kush","Comment":"","OrderStatus":"Open"},{"ID":69,"Date":"04/29/25","Customer":"CC&Sons","SoldPN":"170BC101-3","SoldSN":"1043","SalesOrderNo":"SO22970","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"5000","CorePN":"170BC101-3","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":70,"Date":"05/09/25","Customer":"Kush","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":65000.0,"SalesCurrency":"USD","SalesPriceNote":"65000 $","CorePN":"737852A","CoreSN":"CSD0456GEN0471","ExchangeStatus":"RO Assigned","RONumber":"RO661208","RepairShop":"Aeg","AssyStatus":"shop price 53839 $","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Kush","Comment":"","OrderStatus":"Open"},{"ID":71,"Date":"04/29/25","Customer":"CC&Sons","SoldPN":"1C27-5B","SoldSN":"9AG105","SalesOrderNo":"SO22970","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"3000","CorePN":"1C27-5","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":72,"Date":"09/04/25","Customer":"Sky Cap","SoldPN":"7008470-912","SoldSN":"89020450","SalesOrderNo":"SO52993","SalesPrice":10000.0,"SalesCurrency":"USD","SalesPriceNote":"10000$","CorePN":"7008470-912","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":73,"Date":"04/08/25","Customer":"BusyBee","SoldPN":"597311","SoldSN":"1TJ03897","SalesOrderNo":"SO52967","SalesPrice":3750.0,"SalesCurrency":"USD","SalesPriceNote":"3750$ +1500+ 1200*2","CorePN":"597311","CoreSN":"1AEA0932","ExchangeStatus":"RO Assigned","RONumber":"RO661251","RepairShop":"Action Aero","AssyStatus":"2 N FAIL+ W.O  FD","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"waiting for EX FD from Busy bee","OrderStatus":"Closed"},{"ID":74,"Date":"04/08/25","Customer":"BusyBee","SoldPN":"597311","SoldSN":"2PH00221","SalesOrderNo":"SO52967","SalesPrice":3750.0,"SalesCurrency":"USD","SalesPriceNote":"3750$ +1500+ 1200*2","CorePN":"597311","CoreSN":"G0983","ExchangeStatus":"RO Assigned","RONumber":"RO661250","RepairShop":"Action Aero","AssyStatus":"2 N FAIL+ W.O  FD","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"waiting for EX FD from Busy bee","OrderStatus":"Closed"},{"ID":75,"Date":"06/05/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":12500.0,"SalesCurrency":"USD","SalesPriceNote":"12500$","CorePN":"661002011","CoreSN":"DRG1612-91","ExchangeStatus":"RO Assigned","RONumber":"RO661276","RepairShop":"Vse","AssyStatus":"solinoid is Ok","RepairQuotePrice":7150.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"7150$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":76,"Date":"09/08/25","Customer":"BusyBee","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"066-50001-3404","CoreSN":"8651","ExchangeStatus":"Received - awaiting RO","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"BusyBee","Comment":"","OrderStatus":"Open"},{"ID":77,"Date":"09/08/25","Customer":"BusyBee","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"457400GB1901","CoreSN":"457400021601","ExchangeStatus":"Received - awaiting RO","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"BusyBee","Comment":"","OrderStatus":"Open"},{"ID":78,"Date":"09/08/25","Customer":"BusyBee","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"EADFI8317-411","CoreSN":"863016","ExchangeStatus":"Received - awaiting RO","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"BusyBee","Comment":"","OrderStatus":"Open"},{"ID":79,"Date":"08/27/25","Customer":"Amapola","SoldPN":"737852A","SoldSN":"CSD0358GEN0561","SalesOrderNo":"SO52994","SalesPrice":72000.0,"SalesCurrency":"USD","SalesPriceNote":"72000$","CorePN":"737852A","CoreSN":"CSD0152GEN0155","ExchangeStatus":"RO Assigned","RONumber":"RO661514","RepairShop":"Global","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Aerojet","Comment":"","OrderStatus":"Closed"},{"ID":80,"Date":"05/16/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":9700.0,"SalesCurrency":"USD","SalesPriceNote":"9700$","CorePN":"5008269H","CoreSN":"2011","ExchangeStatus":"RO Assigned","RONumber":"RO661225","RepairShop":"Action Aero","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":81,"Date":"05/16/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":14000.0,"SalesCurrency":"USD","SalesPriceNote":"14000$","CorePN":"42011","CoreSN":"DY57","ExchangeStatus":"RO Assigned","RONumber":"RO661226","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":2370.0,"RepairQuoteCurrency":"USD","RepairQuoteNote":"2370$","FailedNozzles":0,"OwnershipChanged":"Tanzania","Comment":"","OrderStatus":"Closed"},{"ID":82,"Date":"01/19/25","Customer":"Newworld Choices","SoldPN":"597311","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"3750+1500","CorePN":"597311","CoreSN":"10R03317","ExchangeStatus":"RO Assigned","RONumber":"RO661542","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":83,"Date":"09/26/25","Customer":"Newworld Choices","SoldPN":"666000143","SoldSN":"1321","SalesOrderNo":"SO52997","SalesPrice":8800.0,"SalesCurrency":"USD","SalesPriceNote":"8800$","CorePN":"666000143","CoreSN":"1280","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":84,"Date":"07/31/25","Customer":"Newworld Choices","SoldPN":"7013788-807","SoldSN":"93070588","SalesOrderNo":"SO52981","SalesPrice":7000.0,"SalesCurrency":"USD","SalesPriceNote":"7000$ SHARED INVOICE","CorePN":"7013788-807","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":85,"Date":"02/12/26","Customer":"Newworld Choices","SoldPN":"737852A","SoldSN":"CSD272GEN0272","SalesOrderNo":"SO53032","SalesPrice":72000.0,"SalesCurrency":"USD","SalesPriceNote":"72000$","CorePN":"737852A","CoreSN":"CSD0411GEN0413","ExchangeStatus":"Received - awaiting RO","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":86,"Date":"08/26/25","Customer":"Orion","SoldPN":"5009982D","SoldSN":"1495","SalesOrderNo":"SO52990","SalesPrice":8900.0,"SalesCurrency":"USD","SalesPriceNote":"8900 $ FOR EXHANGE","CorePN":"5009980D","CoreSN":"1113","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":87,"Date":"04/28/25","Customer":"Newworld Choices","SoldPN":"5009982D","SoldSN":"5192","SalesOrderNo":"SO52969","SalesPrice":12000.0,"SalesCurrency":"USD","SalesPriceNote":"12000$","CorePN":"5009982D","CoreSN":"2187","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":88,"Date":"09/23/25","Customer":"CC&Sons","SoldPN":"42011","SoldSN":"DL29","SalesOrderNo":"SO52995","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"42011","CoreSN":"AW455  &   AW457","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":89,"Date":"04/08/25","Customer":"BusyBee","SoldPN":"785804-3","SoldSN":"900197","SalesOrderNo":"SO52967","SalesPrice":8000.0,"SalesCurrency":"USD","SalesPriceNote":"8000$ (unit failed while installation)","CorePN":"785804-3","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":90,"Date":"08/26/25","Customer":"BusyBee","SoldPN":"785804-3","SoldSN":"891227","SalesOrderNo":"SO52989","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Already paid before","CorePN":"785804-3","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":91,"Date":"11/06/25","Customer":"Tanzania","SoldPN":"2229765-2-A","SoldSN":"055","SalesOrderNo":"SO53009","SalesPrice":32000.0,"SalesCurrency":"USD","SalesPriceNote":"32000$","CorePN":"2229765-2-A","CoreSN":"185","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":92,"Date":"11/05/25","Customer":"BusyBee","SoldPN":"791809-4-004","SoldSN":"89115603","SalesOrderNo":"SO53007","SalesPrice":17500.0,"SalesCurrency":"USD","SalesPriceNote":"17500$","CorePN":"791809-4-004","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":93,"Date":"02/18/25","Customer":"Newworld Choices","SoldPN":"066-50001-3404","SoldSN":"8812","SalesOrderNo":"SO52959","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"12000","CorePN":"066-50001-3404","CoreSN":"7221","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":94,"Date":"01/19/25","Customer":"Newworld Choices","SoldPN":"597311","SoldSN":"","SalesOrderNo":"","SalesPrice":1500.0,"SalesCurrency":"USD","SalesPriceNote":"3750+1200+1500$","CorePN":"597311","CoreSN":"OOOG0071","ExchangeStatus":"RO Assigned","RONumber":"RO661499","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":95,"Date":"11/05/25","Customer":"CC&Sons","SoldPN":"10151N01T00","SoldSN":"129AB","SalesOrderNo":"SO53005","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Previous one failed","CorePN":"10151N01T00","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":96,"Date":"01/09/26","Customer":"BusyBee","SoldPN":"791809-4-004","SoldSN":"87043356","SalesOrderNo":"SO53025","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Previous Exchange unit failed","CorePN":"791809-4-004","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":97,"Date":"11/05/25","Customer":"CC&Sons","SoldPN":"661002011","SoldSN":"DRG7394-91","SalesOrderNo":"SO53005","SalesPrice":9000.0,"SalesCurrency":"USD","SalesPriceNote":"9000$","CorePN":"661002011","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":98,"Date":"05/09/25","Customer":"Kush","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"737852A","CoreSN":"CSD0520GEN0530","ExchangeStatus":"RO Assigned","RONumber":"RO661209","RepairShop":"Aeg","AssyStatus":"shop price 24187 $","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"NO PRICE","FailedNozzles":0,"OwnershipChanged":"Kush","Comment":"AMAPOLA TAKEN -THEY NOT PAID","OrderStatus":"Closed"},{"ID":99,"Date":"11/29/25","Customer":"CC&Sons","SoldPN":"30-1951-1","SoldSN":"0046","SalesOrderNo":"SO53014","SalesPrice":7000.0,"SalesCurrency":"USD","SalesPriceNote":"ALREDY PAID THIS AMOUNT 7000$","CorePN":"30-1951-1","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":100,"Date":"08/26/25","Customer":"CC&Sons","SoldPN":"5009982D","SoldSN":"1909","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"Free of charge on our own aircraft","CorePN":"5009982E","CoreSN":"5117","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":101,"Date":"08/13/24","Customer":"Aerosum","SoldPN":"066-01171-3404","SoldSN":"30052","SalesOrderNo":"SO52927","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"066-50001-3404","CoreSN":"7068","ExchangeStatus":"Exchange Received","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Closed"},{"ID":102,"Date":"09/23/25","Customer":"CC&Sons","SoldPN":"42011","SoldSN":"DL29","SalesOrderNo":"SO52996","SalesPrice":10000.0,"SalesCurrency":"USD","SalesPriceNote":"10000$","CorePN":"42011","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":103,"Date":"11/05/25","Customer":"CC&Sons","SoldPN":"597311","SoldSN":"000B0949","SalesOrderNo":"SO53005","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"3750","CorePN":"597311","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":104,"Date":"11/06/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"10839F","CoreSN":"WA19517","ExchangeStatus":"RO Assigned","RONumber":"RO661654","RepairShop":"Parker","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"","Comment":"","OrderStatus":"Open"},{"ID":105,"Date":"04/09/26","Customer":"CC&Sons","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"737852A","CoreSN":"CSD0187GEN0186","ExchangeStatus":"Other","RONumber":"","RepairShop":"Aeg","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"CC&Sons","Comment":"","OrderStatus":"Open"},{"ID":106,"Date":"11/06/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"785804-3","CoreSN":"880270","ExchangeStatus":"RO Assigned","RONumber":"RO661616","RepairShop":"Allclear","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"","Comment":"","OrderStatus":"Open"},{"ID":107,"Date":"11/05/25","Customer":"CC&Sons","SoldPN":"597311","SoldSN":"1SN02008","SalesOrderNo":"SO53005","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"3750","CorePN":"597311","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":108,"Date":"10/03/25","Customer":"CC&Sons","SoldPN":"100-601177-002","SoldSN":"178","SalesOrderNo":"SO53000","SalesPrice":4500.0,"SalesCurrency":"USD","SalesPriceNote":"4500$","CorePN":"100-601177-002","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":109,"Date":"11/28/25","Customer":"CC&Sons","SoldPN":"785804-3","SoldSN":"900193","SalesOrderNo":"SO53013","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"8000","CorePN":"785804-3","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":110,"Date":"11/28/25","Customer":"CC&Sons","SoldPN":"666000143","SoldSN":"45-87","SalesOrderNo":"SO53013","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"8800","CorePN":"666000143","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":111,"Date":"11/05/25","Customer":"CC&Sons","SoldPN":"SEL0C29EC","SoldSN":"647","SalesOrderNo":"SO53005","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"4500","CorePN":"SEL0C29EC","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":112,"Date":"11/06/25","Customer":"Tanzania","SoldPN":"","SoldSN":"","SalesOrderNo":"","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"","CorePN":"10181N01R00","CoreSN":"293","ExchangeStatus":"RO Assigned","RONumber":"RO661611","RepairShop":"Apf","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"","Comment":"","OrderStatus":"Open"},{"ID":113,"Date":"11/05/25","Customer":"CC&Sons","SoldPN":"2100-4043-00","SoldSN":"000668902","SalesOrderNo":"SO53005","SalesPrice":null,"SalesCurrency":"","SalesPriceNote":"16000","CorePN":"2100-4043-00","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"},{"ID":114,"Date":"10/03/25","Customer":"CC&Sons","SoldPN":"10151N01T00","SoldSN":"321","SalesOrderNo":"SO53000","SalesPrice":5100.0,"SalesCurrency":"USD","SalesPriceNote":"5100$","CorePN":"10151N01T00","CoreSN":"","ExchangeStatus":"Waiting for Exchange Unit","RONumber":"","RepairShop":"","AssyStatus":"","RepairQuotePrice":null,"RepairQuoteCurrency":"","RepairQuoteNote":"","FailedNozzles":0,"OwnershipChanged":"Amapola","Comment":"","OrderStatus":"Open"}];
+const LS='amapola_exchanges_v2', LSC='amapola_cfg_v2', LSCU='amapola_customers_v1';
+/* ===== SHARED DATABASE (Option 2). Paste your Supabase project URL + anon key to put everyone on one live list. Blank = local mode (this PC only). ===== */
+const CONFIG={SUPABASE_URL:"",SUPABASE_KEY:""};
+const cloud=!!(CONFIG.SUPABASE_URL&&CONFIG.SUPABASE_KEY);
+function api(path,opts){opts=opts||{};return fetch(CONFIG.SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/'+path,Object.assign({},opts,{headers:Object.assign({apikey:CONFIG.SUPABASE_KEY,Authorization:'Bearer '+CONFIG.SUPABASE_KEY,'Content-Type':'application/json'},opts.headers||{})}));}
+function recDoc(rec){const d=Object.assign({},rec);delete d.ID;return {id:rec.ID,doc:d};}
+async function pushRecord(rec){if(!cloud)return;try{await api('exchanges?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(recDoc(rec))});}catch(e){toast('Cloud save failed');}}
+async function pushDelete(id){if(!cloud)return;try{await api('exchanges?id=eq.'+id,{method:'DELETE',headers:{Prefer:'return=minimal'}});}catch(e){}}
+async function pushMeta(k,v){if(!cloud)return;try{await api('app_meta?on_conflict=k',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({k:k,v:v})});}catch(e){}}
+async function cloudReplaceAll(){if(!cloud)return;try{await api('exchanges?id=gt.0',{method:'DELETE',headers:{Prefer:'return=minimal'}});await api('exchanges',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify(DATA.map(recDoc))});}catch(e){toast('Cloud sync failed');}}
+async function refresh(){if(!cloud)return;try{const ex=await api('exchanges?select=id,doc&order=id.asc').then(r=>r.json());if(Array.isArray(ex)){DATA=ex.map(r=>migrate(Object.assign({ID:r.id},r.doc)));render();}}catch(e){}}
+function setMode(t){const e=document.getElementById('saved');if(e)e.textContent=t;}
+
+const DEFAULT_CUSTOMERS=["Advantage","Amapola","Aerojet","Aerosum","BusyBee","CC&Sons","I-Fly","Jetways","Kush","Newworld Choices","Orion","Sky Cap","Skyward Express","Tanzania"];
+const SHOPS=["Action Aero","AEG","Baltic","Global","Collin","VSE","Parker","AllClear","APF","Amapola","In-house"];
+const EXSTAT=["Waiting for Exchange Unit","Exchange Received","Received - awaiting RO","RO Assigned","Other"];
+const STATUSES=["Open","Partial","Closed"];
+let DATA=[], CUST=[], cfg={ccList:["thomas.carlborg@amapola.nu","mohsen.kharazi@amapola.nu","arun.raghavan@amapola.nu"],overdueDays:30,nozzleRate:1200};
+let filter='all', q='', custF='', queue=[], EU=[];
+const $=s=>document.querySelector(s);
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const money=(a,c)=> (a==null||a==='')?'<span class="dim">—</span>':(c||'USD')+' '+Number(a).toLocaleString();
+
+/* ---- order/unit model ---- */
+function blankUnit(){return {SoldPN:'',SoldSN:'',Qty:1,Description:'',SalesPrice:'',SalesCurrency:'USD',SalesPriceNote:'',CorePN:'',CoreSN:'',ExchangeStatus:'Waiting for Exchange Unit',StockLocation:'',RONumber:'',RepairShop:'',AssyStatus:'',RepairQuotePrice:'',RepairQuoteCurrency:'USD',RepairQuoteNote:'',FailedNozzles:'',NozzleCharge:''};}
+function migrate(r){
+ if(r&&Array.isArray(r.units))return r;
+ r=r||{};
+ return {ID:r.ID,Date:r.Date||'',Customer:r.Customer||'',SalesOrderNo:r.SalesOrderNo||'',OrderStatus:r.OrderStatus||'Open',
+  Ownership:r.OwnershipChanged||r.Ownership||'',ExtraCC:r.ExtraCC||'',Comment:r.Comment||'',
+  units:[{SoldPN:r.SoldPN||'',SoldSN:r.SoldSN||'',Qty:r.Qty||1,Description:r.Description||'',
+   SalesPrice:(r.SalesPrice==null?null:r.SalesPrice),SalesCurrency:r.SalesCurrency||'USD',SalesPriceNote:r.SalesPriceNote||'',
+   CorePN:r.CorePN||'',CoreSN:r.CoreSN||'',ExchangeStatus:r.ExchangeStatus||'Waiting for Exchange Unit',StockLocation:r.StockLocation||'',
+   RONumber:r.RONumber||'',RepairShop:r.RepairShop||'',AssyStatus:r.AssyStatus||'',
+   RepairQuotePrice:(r.RepairQuotePrice==null?null:r.RepairQuotePrice),RepairQuoteCurrency:r.RepairQuoteCurrency||'USD',RepairQuoteNote:r.RepairQuoteNote||'',
+   FailedNozzles:r.FailedNozzles||0,NozzleCharge:(r.NozzleCharge==null?null:r.NozzleCharge)}]};
+}
+const oUnits=o=>(o.units||[]);
+const oSales=o=>oUnits(o).reduce((s,u)=>s+(+u.SalesPrice||0),0);
+const oNoz=o=>oUnits(o).reduce((s,u)=>s+(+u.FailedNozzles||0),0);
+
+/* ---- persistence ---- */
+function localLoad(){
+ try{let r=localStorage.getItem(LS)||localStorage.getItem('amapola_exchanges_v1');DATA=r?JSON.parse(r):JSON.parse(JSON.stringify(SEED));}catch(e){DATA=JSON.parse(JSON.stringify(SEED));}
+ try{const c=localStorage.getItem(LSC);if(c)cfg=Object.assign(cfg,JSON.parse(c));}catch(e){}
+ try{const cu=localStorage.getItem(LSCU);CUST=cu?JSON.parse(cu):[];}catch(e){CUST=[];}
+ if(!localStorage.getItem(LS))save(true);
+}
+async function load(){
+ if(cloud){
+  try{
+   const ex=await api('exchanges?select=id,doc&order=id.asc').then(r=>r.json());
+   if(Array.isArray(ex)&&ex.length){DATA=ex.map(r=>Object.assign({ID:r.id},r.doc));}
+   else{DATA=JSON.parse(JSON.stringify(SEED));DATA=DATA.map(migrate);await cloudReplaceAll();}
+   const meta=await api('app_meta?select=k,v').then(r=>r.json());
+   if(Array.isArray(meta)){const cm=meta.find(m=>m.k==='customers');if(cm&&Array.isArray(cm.v))CUST=cm.v;const cf=meta.find(m=>m.k==='config');if(cf&&cf.v)cfg=Object.assign(cfg,cf.v);}
+   setTimeout(()=>setMode('Shared • live'),300);
+  }catch(e){localLoad();setTimeout(()=>setMode('Cloud unreachable • local'),300);}
+ }else{localLoad();setTimeout(()=>setMode('Local • this PC'),300);}
+ DATA=DATA.map(migrate);
+ if(!Array.isArray(cfg.ccList)||!cfg.ccList.length)cfg.ccList=["thomas.carlborg@amapola.nu","mohsen.kharazi@amapola.nu","arun.raghavan@amapola.nu"];
+ const have=new Set(CUST.map(c=>c.name));
+ [...DEFAULT_CUSTOMERS,...DATA.map(r=>r.Customer)].forEach(n=>{if(n&&!have.has(n)){CUST.push({name:n,email:''});have.add(n);}});
+ if(cloud){await pushMeta('customers',CUST);}else{saveCust(true);}
+}
+function save(silent){localStorage.setItem(LS,JSON.stringify(DATA));const d=new Date();if(!cloud)$('#saved').textContent='Saved '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});if(!silent)toast('Saved');}
+function saveCfg(){localStorage.setItem(LSC,JSON.stringify(cfg));}
+function saveCust(silent){CUST.sort((a,b)=>a.name.localeCompare(b.name));localStorage.setItem(LSCU,JSON.stringify(CUST));}
+function custEmail(name){const c=CUST.find(c=>c.name===name);return c?c.email:'';}
+function ensureCustomer(name){if(name&&!CUST.some(c=>c.name===name)){CUST.push({name:name,email:''});saveCust(true);pushMeta('customers',CUST);}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1900);}
+
+/* ---- date / status ---- */
+function parseDate(s){if(!s)return null;const m=String(s).match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);if(!m)return null;let y=+m[3];if(y<100)y+=2000;const d=new Date(y,+m[1]-1,+m[2]);return isNaN(d)?null:d;}
+function daysSince(o){const d=parseDate(o.Date);if(!d)return null;return Math.floor((Date.now()-d.getTime())/86400000);}
+function outstanding(o){return o.OrderStatus!=='Closed';}
+function isOverdue(o){const d=daysSince(o);return outstanding(o)&&d!=null&&d>(+cfg.overdueDays||30);}
+function overdueList(){return DATA.filter(isOverdue).sort((a,b)=>(daysSince(b)||0)-(daysSince(a)||0));}
+function statusBadge(o){if(o.OrderStatus==='Closed')return '<span class="badge b-closed">Closed</span>';if(o.OrderStatus==='Partial')return '<span class="badge b-partial">Partial</span>';return '<span class="badge b-open">Open</span>';}
+function passes(o){
+ if(filter==='open'&&o.OrderStatus!=='Open')return false;
+ if(filter==='partial'&&o.OrderStatus!=='Partial')return false;
+ if(filter==='closed'&&o.OrderStatus!=='Closed')return false;
+ if(filter==='overdue'&&!isOverdue(o))return false;
+ if(filter==='noz'&&!oNoz(o))return false;
+ if(custF&&o.Customer!==custF)return false;
+ if(q){let b=[o.Customer,o.SalesOrderNo].concat(oUnits(o).flatMap(u=>[u.SoldPN,u.SoldSN,u.CorePN,u.CoreSN,u.RONumber])).join(' ').toUpperCase();if(!b.includes(q.toUpperCase()))return false;}
+ return true;
+}
+function nextId(){return DATA.reduce((m,r)=>Math.max(m,+r.ID||0),0)+1;}
+
+function renderKPIs(){
+ const open=DATA.filter(r=>r.OrderStatus==='Open').length;
+ const partial=DATA.filter(r=>r.OrderStatus==='Partial').length;
+ const closed=DATA.filter(r=>r.OrderStatus==='Closed').length;
+ const over=DATA.filter(isOverdue).length;
+ const noz=DATA.reduce((s,r)=>s+oNoz(r),0);
+ const nozRecs=DATA.filter(r=>oNoz(r)).length;
+ const sales=DATA.reduce((s,r)=>s+oSales(r),0);
+ const IC={overdue:'<path d="M12 9v4M12 17h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z"/>',
+  open:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',partial:'<path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9h9"/>',
+  closed:'<path d="M20 6 9 17l-5-5"/>',noz:'<path d="m13 2-3 7h5l-3 13 9-13h-6l3-7z"/>',val:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'};
+ const svg=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+ const cards=[['overdue','overdue',over,'Overdue 30d+'],['open','open',open,'Open'],['partial','partial',partial,'Partial returns'],
+   ['closed','closed',closed,'Closed'],['noz','noz',noz,'Failed nozzles'],['val','all','USD '+sales.toLocaleString(),'Sales value']];
+ $('#kpis').innerHTML=cards.map(([c,f,n,l])=>`<div class="kpi ${c}" onclick="setFilter('${f}')"><div class="ic">${svg(IC[c])}</div><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+ const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+ set('cnt-overdue',over);set('cnt-open',open);set('cnt-partial',partial);set('cnt-closed',closed);set('cnt-noz',nozRecs);
+ const ab=$('#alertBar');
+ if(over>0&&!ab.dataset.dismissed){ab.classList.add('on');
+  ab.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
+   <div><b>${over} order${over>1?'s are':' is'} overdue</b> — past ${cfg.overdueDays} days with the core still owed. Send reminders (CC: ${esc(cfg.ccList.join(', '))}).</div>
+   <button class="ab-btn" onclick="setFilter('overdue')">Review overdue</button>
+   <button class="ab-x" onclick="this.parentElement.dataset.dismissed=1;this.parentElement.classList.remove('on')">&times;</button>`;
+ }else{ab.classList.remove('on');}
+}
+function render(){
+ renderKPIs();
+ const list=DATA.filter(passes).sort((a,b)=>(isOverdue(b)-isOverdue(a))||(outstanding(b)-outstanding(a))||(a.Customer||'').localeCompare(b.Customer||''));
+ $('#count').textContent=list.length+' of '+DATA.length+' orders';
+ const titles={all:'All orders',overdue:'Overdue (30+ days)',open:'Open',partial:'Partial returns',closed:'Closed',noz:'Nozzle claims'};
+ const pt=document.getElementById('panelTitle');if(pt)pt.textContent=titles[filter]||'Orders';
+ const bb=document.getElementById('bulkBtn');if(bb)bb.classList.toggle('on',overdueList().length>0);
+ $('#rows').innerHTML=list.map(o=>{
+  const od=isOverdue(o),days=daysSince(o),us=oUnits(o);
+  const first=us[0]||{},more=us.length>1?` <span class="dim">+${us.length-1}</span>`:'';
+  return `<tr onclick="openView(${o.ID})">
+  <td>${statusBadge(o)}${od?`<br><span class="chip-od">⚠ ${days}d overdue</span>`:''}</td>
+  <td><b>${esc(o.Customer)||'<span class=dim>—</span>'}</b><div class="dim" style="font-size:11px">${esc(o.Date)}</div></td>
+  <td><span class="mono">${esc(o.SalesOrderNo)||'—'}</span></td>
+  <td><span class="pill-units">${us.length} unit${us.length>1?'s':''}</span></td>
+  <td class="hidem"><span class="mono">${esc(first.SoldPN)||'—'}</span>${first.SoldSN?' · <span class="mono">'+esc(first.SoldSN)+'</span>':''}${more}</td>
+  <td class="hidem"><span class="mono">${esc(first.RONumber)||'—'}</span>${first.RepairShop?'<div class="dim" style="font-size:11px">'+esc(first.RepairShop)+'</div>':''}</td>
+  <td>${money(oSales(o)||null,(first.SalesCurrency||'USD'))}</td>
+  <td>${oNoz(o)?'<span class="badge b-noz">'+oNoz(o)+'</span>':'<span class="dim">—</span>'}</td>
+ </tr>`}).join('') || `<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><div>No matching orders. Click “New exchange” to add one.</div></div></td></tr>`;
+}
+function setFilter(f){filter=f;[...document.querySelectorAll('.tab')].forEach(t=>t.classList.toggle('on',t.dataset.f===f));const sd=document.getElementById('side');if(sd)sd.classList.remove('open');render();}
+
+/* ---- view ---- */
+function fld(k,v){return `<div class="f"><label>${k}</label><div class="vv">${v||'<span class=dim>—</span>'}</div></div>`}
+function unitView(u,i){
+ const nozCharge=(+u.FailedNozzles||0)&&(u.NozzleCharge||(+u.FailedNozzles)*cfg.nozzleRate);
+ return `<div class="uview"><div class="uh">Unit ${i+1}${u.Qty&&u.Qty!=1?' · Qty '+esc(u.Qty):''}</div>
+  <div class="grid3">${fld('Part No','<span class=mono>'+esc(u.SoldPN)+'</span>')}${fld('Serial No','<span class=mono>'+esc(u.SoldSN)+'</span>')}${fld('Qty',esc(u.Qty||1))}
+   ${fld('Description',esc(u.Description))}${fld('Sales price',money(u.SalesPrice,u.SalesCurrency)+(u.SalesPriceNote&&u.SalesPrice==null?' <span class=dim>('+esc(u.SalesPriceNote)+')</span>':''))}${fld('Stock location',esc(u.StockLocation))}
+   ${fld('Core P/N','<span class=mono>'+esc(u.CorePN)+'</span>')}${fld('Core S/N','<span class=mono>'+esc(u.CoreSN)+'</span>')}${fld('Exchange status',esc(u.ExchangeStatus))}
+   ${fld('Repair Order','<span class=mono>'+esc(u.RONumber)+'</span>')}${fld('Repair shop',esc(u.RepairShop))}${fld('Repair quote',money(u.RepairQuotePrice,u.RepairQuoteCurrency)+(u.RepairQuoteNote&&u.RepairQuotePrice==null?' <span class=dim>('+esc(u.RepairQuoteNote)+')</span>':''))}
+   ${fld('Assy status',esc(u.AssyStatus))}${fld('Failed nozzles',+u.FailedNozzles?('<span class="badge b-noz">'+u.FailedNozzles+'</span>'):'—')}${fld('Nozzle charge',nozCharge?money(nozCharge,u.SalesCurrency||'USD'):'—')}</div></div>`;
+}
+function openView(id){
+ const o=DATA.find(x=>x.ID===id);if(!o)return;
+ const od=isOverdue(o),days=daysSince(o),ageTxt=days==null?'—':(days+' days'+(od?' · <span style="color:var(--overdue);font-weight:800">OVERDUE</span>':''));
+ $('#mTitle').innerHTML=esc(o.Customer)+' &nbsp; '+statusBadge(o)+' &nbsp; <span style="font-size:12px;opacity:.85">'+esc(o.SalesOrderNo)+'</span>';
+ $('#mBody').innerHTML=`
+  <div class="sec">Order</div>
+  <div class="grid3">${fld('Customer',esc(o.Customer))}${fld('Date / age',esc(o.Date)+' &nbsp; <span class=dim>('+ageTxt+')</span>')}${fld('Sales Order No','<span class=mono>'+esc(o.SalesOrderNo)+'</span>')}
+   ${fld('Return status',statusBadge(o))}${fld('Ownership',esc(o.Ownership))}${fld('Extra CC on reminders',esc(o.ExtraCC))}</div>
+  <div class="sec">Units in this order (${oUnits(o).length})</div>
+  ${oUnits(o).map(unitView).join('')}
+  <div class="sec">Comment</div>
+  <div class="viewbox">${esc(o.Comment)||'<span class=dim>No comment</span>'}</div>
+  <div class="btnrow">
+   <button class="btn green" onclick="remind(${o.ID})">✉ Send reminder${od?' ('+days+'d overdue)':''}</button>
+   <button class="btn" onclick="openEdit(${o.ID})">✎ Edit</button>
+   <div class="spacer"></div>
+   <button class="btn red" onclick="del(${o.ID})">🗑 Delete</button>
+  </div>`;
+ $('#modal').classList.add('on');
+}
+/* ---- edit / add ---- */
+function selOpts(arr,sel){return ['<option value=""></option>'].concat(arr.map(o=>`<option ${o===sel?'selected':''}>${esc(o)}</option>`)).join('');}
+function unitCard(u,i){
+ const I=(k,l,t='text')=>`<div class="f"><label>${l}</label><input data-ui="${i}" data-k="${k}" type="${t}" value="${esc(u[k]==null?'':u[k])}"></div>`;
+ const S=(k,l,arr)=>`<div class="f"><label>${l}</label><select data-ui="${i}" data-k="${k}">${selOpts(arr,u[k])}</select></div>`;
+ return `<div class="unitcard"><div class="unithd"><b>Unit ${i+1}</b><button class="rm" title="Remove unit" onclick="removeUnit(${i})">&times;</button></div>
+  <div class="grid4">${I('SoldPN','Part No (P/N)')}${I('SoldSN','Serial No (S/N)')}${I('Qty','Qty','number')}${I('Description','Description')}</div>
+  <div class="grid4">${I('SalesPrice','Sales price','number')}${S('SalesCurrency','Currency',['USD','EUR'])}${I('CorePN','Core P/N (back)')}${I('CoreSN','Core S/N')}</div>
+  <div class="grid4">${S('ExchangeStatus','Exchange status',EXSTAT)}${I('StockLocation','Stock location')}${I('RONumber','Repair Order (RO)')}${S('RepairShop','Repair shop',SHOPS)}</div>
+  <div class="grid4">${I('RepairQuotePrice','Repair quote','number')}${I('AssyStatus','Assy status')}${I('FailedNozzles','Failed nozzles','number')}${I('NozzleCharge','Nozzle charge (auto)','number')}</div>
+  <div class="grid2">${I('SalesPriceNote','Sales price note (original)')}${I('RepairQuoteNote','Quote note (original)')}</div></div>`;
+}
+function renderUnits(){$('#unitsWrap').innerHTML=EU.map(unitCard).join('');}
+function collectUnits(){
+ const arr=EU.map(()=>({}));
+ document.querySelectorAll('#unitsWrap [data-ui]').forEach(inp=>{const i=+inp.dataset.ui;arr[i]=arr[i]||{};arr[i][inp.dataset.k]=inp.value.trim();});
+ EU=arr.map(u=>({SoldPN:u.SoldPN||'',SoldSN:u.SoldSN||'',Qty:u.Qty?+u.Qty:1,Description:u.Description||'',
+   SalesPrice:u.SalesPrice?+u.SalesPrice:null,SalesCurrency:u.SalesCurrency||'USD',SalesPriceNote:u.SalesPriceNote||'',
+   CorePN:u.CorePN||'',CoreSN:u.CoreSN||'',ExchangeStatus:u.ExchangeStatus||'Waiting for Exchange Unit',StockLocation:u.StockLocation||'',
+   RONumber:u.RONumber||'',RepairShop:u.RepairShop||'',AssyStatus:u.AssyStatus||'',
+   RepairQuotePrice:u.RepairQuotePrice?+u.RepairQuotePrice:null,RepairQuoteCurrency:'USD',RepairQuoteNote:u.RepairQuoteNote||'',
+   FailedNozzles:u.FailedNozzles?+u.FailedNozzles:0,NozzleCharge:u.NozzleCharge?+u.NozzleCharge:null}));
+}
+function addUnit(){collectUnits();EU.push(blankUnit());renderUnits();}
+function removeUnit(i){collectUnits();EU.splice(i,1);if(!EU.length)EU.push(blankUnit());renderUnits();}
+function openEdit(id){
+ const o=id?DATA.find(x=>x.ID===id):null;
+ const h=o?o:{ID:0,Date:new Date().toLocaleDateString('en-US',{year:'2-digit',month:'2-digit',day:'2-digit'}),Customer:'',SalesOrderNo:'',OrderStatus:'Open',Ownership:'',ExtraCC:'',Comment:''};
+ EU=o?JSON.parse(JSON.stringify(o.units||[])):[blankUnit()];if(!EU.length)EU=[blankUnit()];
+ $('#mTitle').textContent=id?'Edit exchange order':'New exchange order';
+ const I=(k,l,t='text')=>`<div class="f"><label>${l}</label><input id="h_${k}" type="${t}" value="${esc(h[k]==null?'':h[k])}"></div>`;
+ const S=(k,l,arr)=>`<div class="f"><label>${l}</label><select id="h_${k}">${selOpts(arr,h[k])}</select></div>`;
+ const custDL=CUST.map(c=>`<option value="${esc(c.name)}">`).join('');
+ $('#mBody').innerHTML=`
+  <div class="sec">Order details</div>
+  <div class="grid3">
+   <div class="f"><label>Customer (type to add new)</label><input id="h_Customer" list="custDL" value="${esc(h.Customer)}" placeholder="Pick or type a new name"><datalist id="custDL">${custDL}</datalist></div>
+   ${I('Date','Date (mm/dd/yy)')}${I('SalesOrderNo','Sales Order No')}
+   ${S('OrderStatus','Return status',STATUSES)}${I('Ownership','Ownership')}${I('ExtraCC','Extra CC emails (comma separated)')}</div>
+  <div class="sec">Units in this order</div>
+  <div id="unitsWrap"></div>
+  <button class="btn gray addunit" onclick="addUnit()">+ Add another unit</button>
+  <div class="sec">Comment (whole order)</div>
+  <div class="f"><textarea id="h_Comment">${esc(h.Comment)}</textarea></div>
+  <div class="btnrow"><button class="btn" onclick="saveEdit(${id||0})">💾 Save order</button>
+   <button class="btn gray" onclick="${id?`openView(${id})`:'closeM()'}">Cancel</button></div>`;
+ renderUnits();
+ $('#modal').classList.add('on');
+}
+function hv(k){const el=$('#h_'+k);return el?el.value.trim():'';}
+function saveEdit(id){
+ const cust=hv('Customer');
+ if(!cust){toast('Please enter a customer');return;}
+ collectUnits();
+ ensureCustomer(cust);
+ const rec={ID:id||nextId(),Date:hv('Date'),Customer:cust,SalesOrderNo:hv('SalesOrderNo'),OrderStatus:hv('OrderStatus')||'Open',
+  Ownership:hv('Ownership'),ExtraCC:hv('ExtraCC'),Comment:hv('Comment'),units:EU};
+ if(id){DATA[DATA.findIndex(x=>x.ID===id)]=rec;}else{DATA.push(rec);}
+ save();pushRecord(rec);rebuildCustFilter();render();openView(rec.ID);
+}
+function del(id){if(!confirm('Delete this whole order permanently?'))return;DATA=DATA.filter(x=>x.ID!==id);save();pushDelete(id);rebuildCustFilter();render();closeM();toast('Deleted');}
+function closeM(){$('#modal').classList.remove('on');}
+
+/* ---- reminders ---- */
+function ccFor(o){const extra=(o.ExtraCC||'').split(/[,;]+/).map(s=>s.trim()).filter(Boolean);return [...new Set(cfg.ccList.concat(extra))].join(',');}
+function mailtoFor(o){
+ const to=custEmail(o.Customer),cc=ccFor(o),days=daysSince(o);
+ const lines=oUnits(o).map((u,i)=>`  ${i+1}. P/N ${u.SoldPN||'-'}  S/N ${u.SoldSN||'-'}  Qty ${u.Qty||1}${u.Description?'  ('+u.Description+')':''}`).join('%0D%0A');
+ const sub=`Reminder: Exchange core(s) overdue — SO ${o.SalesOrderNo||'-'}`;
+ const body=`Dear ${o.Customer},%0D%0A%0D%0AThis is a reminder regarding exchange order ${o.SalesOrderNo||''}`+(days!=null?` (now ${days} days since dispatch)`:'')+`.%0D%0A%0D%0AUnit(s) we supplied:%0D%0A${lines}%0D%0A%0D%0AWe are still awaiting the exchange core unit(s) for this order. Kindly advise the dispatch / tracking details at your earliest convenience.%0D%0A%0D%0ABest regards,%0D%0AAmapola — 3rd Party Sales`;
+ return `mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(sub)}&body=${body}`;
+}
+function remind(id){const o=DATA.find(x=>x.ID===id);if(!custEmail(o.Customer)&&!confirm('No email saved for '+o.Customer+'. Open the email anyway (you can fill the address in)?\n\nTip: add the address in Customers.'))return;window.location.href=mailtoFor(o);}
+function startOverdueQueue(){queue=overdueList().slice();if(!queue.length){toast('Nothing overdue');return;}if(!confirm('Open reminder emails for '+queue.length+' overdue order(s)? They open one at a time — send each, then click “Send next”.'))return;sendNext();}
+function sendNext(){
+ if(!queue.length){toast('All overdue reminders opened');const b=document.getElementById('nextBtn');if(b)b.remove();return;}
+ const o=queue.shift();window.open(mailtoFor(o),'_blank');
+ let b=document.getElementById('nextBtn');
+ if(!b){b=document.createElement('button');b.id='nextBtn';b.className='btn';b.style.cssText='position:fixed;bottom:24px;right:24px;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.3)';b.onclick=sendNext;document.body.appendChild(b);}
+ b.textContent=queue.length?('Send next reminder ('+queue.length+' left)'):'Done — close';
+ if(!queue.length)b.onclick=()=>b.remove();
+}
+/* ---- customers ---- */
+function openCustomers(){
+ $('#mTitle').textContent='Customers';
+ $('#mBody').innerHTML=`<p class="dim" style="font-size:12.5px;margin:0 0 12px">Add customers and their email. Reminders go to this address (CC: ${esc(cfg.ccList.join(', '))} plus any Extra CC on the order).</p><div id="custWrap"></div>
+  <div class="btnrow"><button class="btn gray" onclick="addCustRow()">+ Add customer</button><div class="spacer"></div><button class="btn" onclick="saveCustomers()">💾 Save customers</button></div>`;
+ renderCustRows();$('#modal').classList.add('on');
+}
+function renderCustRows(){$('#custWrap').innerHTML=CUST.map((c,i)=>`<div class="custrow"><input data-i="${i}" data-k="name" value="${esc(c.name)}" placeholder="Customer name"><input data-i="${i}" data-k="email" value="${esc(c.email)}" placeholder="email@company.com"><button class="rm" onclick="rmCust(${i})">&times;</button></div>`).join('');}
+function addCustRow(){collectCust();CUST.push({name:'',email:''});renderCustRows();}
+function rmCust(i){collectCust();CUST.splice(i,1);renderCustRows();}
+function collectCust(){document.querySelectorAll('#custWrap input').forEach(inp=>{const i=+inp.dataset.i;if(CUST[i])CUST[i][inp.dataset.k]=inp.value.trim();});}
+function saveCustomers(){collectCust();CUST=CUST.filter(c=>c.name);saveCust();pushMeta('customers',CUST);rebuildCustFilter();toast('Customers saved');closeM();}
+
+/* ---- settings / backup ---- */
+function openSettings(){
+ $('#mTitle').textContent='Settings';
+ $('#mBody').innerHTML=`<div class="sec">Reminder emails</div>
+  <div class="f"><label>CC these colleagues on every reminder (comma separated)</label><input id="s_cc" value="${esc(cfg.ccList.join(', '))}"></div>
+  <div class="grid2"><div class="f"><label>Mark overdue after (days)</label><input id="s_od" type="number" value="${esc(cfg.overdueDays)}"></div><div class="f"><label>Default charge per failed nozzle (USD)</label><input id="s_nz" type="number" value="${esc(cfg.nozzleRate)}"></div></div>
+  <div class="sec">Your data</div><p class="dim" style="font-size:12.5px;margin:0 0 10px">${DATA.length} orders saved. Use Backup to download a copy, Restore to load it back.</p>
+  <div class="btnrow"><button class="btn" onclick="saveSettings()">💾 Save settings</button><button class="btn gray" onclick="backup()">⬇ Backup</button><button class="btn red" onclick="resetSeed()">↺ Reset to original</button></div>`;
+ $('#modal').classList.add('on');
+}
+function saveSettings(){cfg.ccList=$('#s_cc').value.split(',').map(s=>s.trim()).filter(Boolean);if(!cfg.ccList.length)cfg.ccList=["thomas.carlborg@amapola.nu","mohsen.kharazi@amapola.nu","arun.raghavan@amapola.nu"];cfg.overdueDays=+$('#s_od').value||30;cfg.nozzleRate=+$('#s_nz').value||1200;saveCfg();pushMeta('config',cfg);render();toast('Settings saved');closeM();}
+function backup(){const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),customers:CUST,config:cfg,records:DATA},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='exchange-tracker-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Backup downloaded');}
+function restore(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const j=JSON.parse(rd.result);let recs=Array.isArray(j)?j:j.records;if(!Array.isArray(recs))throw 0;recs=recs.map(migrate);if(!confirm('Replace current '+DATA.length+' orders with '+recs.length+' from the backup?'))return;DATA=recs;if(j.customers)CUST=j.customers;if(j.config)cfg=Object.assign(cfg,j.config);save();saveCust(true);saveCfg();if(cloud){cloudReplaceAll();pushMeta('customers',CUST);pushMeta('config',cfg);}rebuildCustFilter();render();toast('Restored '+recs.length+' orders');}catch(e){toast('Could not read that file');}ev.target.value='';};rd.readAsText(f);}
+function resetSeed(){if(!confirm('Discard all changes and reload the original records?'))return;DATA=JSON.parse(JSON.stringify(SEED)).map(migrate);save();if(cloud)cloudReplaceAll();rebuildCustFilter();render();closeM();toast('Reset done');}
+function rebuildCustFilter(){const cur=$('#cust').value;const names=[...new Set(DATA.map(r=>r.Customer).filter(Boolean))].sort();$('#cust').innerHTML='<option value="">All customers</option>'+names.map(c=>`<option ${c===cur?'selected':''}>${esc(c)}</option>`).join('');}
+
+// init
+$('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(b&&b.dataset.f)setFilter(b.dataset.f);};
+$('#q').oninput=e=>{q=e.target.value;render();};
+$('#cust').onchange=e=>{custF=e.target.value;render();};
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeM();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+(async()=>{await load();rebuildCustFilter();render();if(cloud)setInterval(refresh,20000);})();
+</script></body></html>

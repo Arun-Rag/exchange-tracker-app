@@ -1,0 +1,115 @@
+ID,Date,Customer,SoldPN,SoldSN,SalesOrderNo,SalesPrice,SalesCurrency,SalesPriceNote,CorePN,CoreSN,ExchangeStatus,RONumber,RepairShop,AssyStatus,RepairQuotePrice,RepairQuoteCurrency,RepairQuoteNote,FailedNozzles,OwnershipChanged,Comment,OrderStatus,Due
+1,08/13/24,Advantage,,,,,,WE CLOSED THE REPAIR SEVICE WITH THEM DUE TO ISSUES,3244858-24,B70014N,RO Assigned,RO659637,Action Aero,,17416.0,USD,17416$,0,Amapola,,Closed,False
+2,08/13/24,Advantage,,,,,,WE CLOSED THE REPAIR SEVICE WITH THEM DUE TO ISSUES,3244858-21,B15404V,RO Assigned,RO659638,Action Aero,,31750.0,USD,31750$,0,Amapola,,Closed,False
+3,08/13/24,Advantage,597311,1RJ01465,SO52923,,,1 Nozzle replaced. Required to claim with Advantage.,597311,1RJ01465,RO Assigned,RO660263,Action Aero,ASSY COMPLETED from Advantage,,,Q.P $1325 FD $410. 1 EA FAILURE NOZZEL CLAIM WT ADVANTAGE.,1,Amapola,,Closed,False
+4,08/13/24,Advantage,,,,,,4 Nozzle replaced; Required to claim with Advantage,597311,618A4285,RO Assigned,RO660264,Action Aero,ASSY COMPLETED from Advantage,,,Q. P $1325 + $410  4 EA FAIL NOZZLE CLAIM ADVANTAGE,4,Amapola,,Closed,False
+5,08/13/24,Advantage,597311,10J00287,SO52923,,,Flow Devider Replaced;Required to claim with Advantage,597311,10J00287,RO Assigned,RO660279,Action Aero,ASSY COMPLETED from Advantage,,,QP $1325 + FD.$1000 . (FAILURE NOZZLE CLAIM WT ADVANTAGE),1,Amapola,,Closed,False
+6,08/13/24,Advantage,,597311,618A8107,,,WE CLOSED THE REPAIR SEVICE WITH THEM DUE TO ISSUES,597311,618A8107,Received - awaiting RO,,Action Aero,FLOW DEVIDER MISSING from Advantage,,,,0,,,Closed,False
+7,08/13/24,Amapola,5009982E,5256,SO52914,14700.0,USD,14700$,5009982E,5256,RO Assigned,RO659977,Action Aero,,375.0,USD,375$,0,Skyward Express,,Closed,False
+8,02/27/25,BusyBee,,,,,,,3244873-5,B15590V,RO Assigned,RO660979,Action Aero,,31617.8,USD,31617.80 $,0,BusyBee,Faulty Throttle shaft- $21 k,Open,False
+9,04/25/25,BusyBee,,,,61500.0,USD,61500 $,737852A,CSD0192GEN0205,RO Assigned,RO660040,Aeg,,41277.0,USD,41277$,0,BusyBee,APPROVED,Closed,False
+10,04/25/25,BusyBee,,,,59500.0,USD,59500 $,737852A,Thomas Carlborg,RO Assigned,RO660191,Aeg,,39686.0,USD,39686$,0,BusyBee,APPROVED,Closed,False
+11,08/13/24,I-Fly,5009980E,1199,SO52902,15000.0,USD,15000$,5009980D,1036X,RO Assigned,RO660278,Action Aero,,,,BER $14813.28. SOLD TO A.A  FOR $500 REF ORDER P19419.,0,Amapola,,Closed,False
+12,08/13/24,I-Fly,737852A,CSD0611GEN0607,SO52881,45000.0,USD,45000$,73785A,CSD0232GEN0241,RO Assigned,RO660272,Aeg,,,,No price Quoted,0,Amapola,,Closed,False
+13,08/13/24,I-Fly,3244858-24,B15421T,SO52902,45000.0,USD,45000$,3244858-24,B15303V,RO Assigned,RO660890,Action Aero,,,,NO PRICE,0,Amapola,,Closed,False
+14,08/13/24,I-Fly,PO31182,,SO52902,,,,5009980D,1104,RO Assigned,RO660393,Action Aero,,1075.0,USD,1075$,0,Amapola,,Closed,False
+15,08/13/24,I-Fly,PO31182,,SO52902,,,,3244858-24,B15303V,RO Assigned,RO660890,,,,,,0,Amapola,,Closed,False
+16,05/29/24,Jetways,,,,,,BER quote+Evaluation fee+Transport Fee+Manhour+ Extra,737852A,CSD0407GEN0308,RO Assigned,RO660224,Aeg,,,,REJECTED,0,Jetways,DONOR (BER),Open,False
+17,05/29/24,Jetways,,,,,,BER quote+Evaluation fee+Transport Fee+Manhour+ Extra,737852A,CSD0146GEN0336,RO Assigned,RO660225,Aeg,,,,REJECTED,0,Jetways,DONOR (BER),Open,False
+18,10/03/24,Jetways,42011,BI35,,3500.0,USD,3500 $,42011,BI35,RO Assigned,RO660510,Aeg,,,,NO PRICE,0,Jetways,BER,Open,False
+19,10/03/24,Jetways,42011,AH-51630,,11000.0,USD,11000 $,42011,AH-51630,RO Assigned,RO660511,Aeg,,2507.0,USD,2507$,0,Jetways,,Open,False
+20,10/10/24,Jetways,5009980D,1641,,3500.0,USD,3500 $,5009980D,1641,RO Assigned,RO660392,Action Aero,,,,NO PRICE,0,Jetways,BER,Open,False
+21,04/08/25,Jetways,737852A,CSD0358GEN0561,,63000.0,USD,63000 $,737852A,CSD0358GEN0561,RO Assigned,RO660404,Aeg,,31148.0,USD,31148 $,0,Jetways,12 qty of piston replaced,Open,False
+22,04/08/25,Jetways,737852A,CSD0206GEN0146,SO52980,72000.0,USD,72000 $,737852A,CSD0206GEN0146,RO Assigned,RO660405,Aeg,,42645.0,USD,42645 $,0,Aerojet,2 qty of piston required,Closed,False
+23,04/08/25,Jetways,,,,,,,737852A,CSD0308GEN0311,RO Assigned,RO660406,Aeg,,44688.0,USD,44688 $,0,Jetways,,Open,False
+24,04/08/25,Jetways,737852A,CSD0561GEN0431,,67425.0,USD,67425$ shared the invoice,737852A,CSD0561GEN0431,RO Assigned,RO660407,Aeg,,40302.0,USD,40302 $,0,Jetways,2 qty of piston required,Open,False
+25,04/08/25,Jetways,737852A,CSD0572GEN0575,,68000.0,USD,68000$ shared the invoice,737852A,CSD0572GEN0575,RO Assigned,RO660408,Aeg,,42573.0,USD,42573 $,0,Jetways,18 qty of piston replaced,Open,False
+26,08/13/24,Skyward Express,5009982D,5085,SO52914,9700.0,USD,9700$,5009982D,5085,RO Assigned,RO660135,Action Aero,,7224.0,USD,"722,4$",0,Skyward Express,,Closed,False
+27,08/13/24,Skyward Express,3244873-7,B70041N,SO52914,29500.0,USD,29500$,3244858-24,B70041N,RO Assigned,RO659643,Action Aero,,17416.0,USD,17416$,0,Skyward Express,,Closed,False
+28,05/13/24,Skyward Express,,,,,,,3244858-21,B15321V,RO Assigned,RO660140,Action Aero,,,,NO PRICE,0,Skyward Express,,Open,False
+29,05/13/24,Skyward Express,,,,,,,3244858-22,B15354N,RO Assigned,RO660142,Action Aero,,,,NO PRICE,0,Skyward Express,,Open,False
+30,05/13/24,Skyward Express,,,,,,,3244873-5,B15604V,RO Assigned,RO660137,Action Aero,,2800.0,USD,2800$,0,Skyward Express,,Open,False
+31,08/13/24,Skyward Express,,,,,,We created a SO52902; Failure on installation. Bring back to us.,3244858-24,B15421T,RO Assigned,RO659641,Action Aero,,15120.0,USD,15120$,0,Amapola,,Closed,False
+32,08/13/24,Skyward Express,3244858-26,B15191V,SO52914,40800.0,USD,40800$,3244858-26,B15191V,RO Assigned,RO659642,Action Aero,,30800.0,USD,30800$,0,Skyward Express,,Closed,False
+33,08/13/24,Tanzania,3244858-26,B15191V,SO52933,,,,3244858-26,B15369V,RO Assigned,RO660107,Action Aero,,2800.0,USD,2800$,0,Tanzania,STEPPER MOTOR FROM DONOR 660220.,Closed,False
+34,08/13/24,Tanzania,5007996-1,MAY90-0636,SO52922,,,"15,236.00",5007996-1,MAY90-0636,RO Assigned,RO660122,Baltic,,11722.82,USD,11722.82$,0,Tanzania,,Closed,False
+35,08/13/24,Tanzania,5007996-1,APR91-0777,SO52922,,,"22,970.00",5007996-1,APR91-0777,RO Assigned,RO660123,Baltic,,17699.36,USD,17699.36$,0,Tanzania,,Closed,False
+36,08/13/24,Tanzania,5007996-1,APR91-0776,SO52922,,,"16,430.00",5007996-1,APR91-0776,RO Assigned,RO660124,Baltic,,12638.41,USD,12638.41$,0,Tanzania,,Closed,False
+37,08/13/24,Tanzania,737852A,CSD0623GEN0680,SO52933,,,,737852A,CSD0623GEN0680,RO Assigned,RO660092,Aeg,,19457.0,USD,19457$,0,Tanzania,,Closed,False
+38,08/13/24,Sky Cap,597311,1XS10467,SO52911,1200.0,USD,1200$,597311,1MA08524,RO Assigned,RO660574,Action Aero,,2610.0,USD,2610$,0,Amapola,,Closed,False
+39,03/25/25,BusyBee,597311,G0346,SO52940,,,Ex  3750+ 1200 = 4950 $  (INVOICE FOR 1200 $),597311,1YJ00688,RO Assigned,RO660904,Action Aero,,,,435$ FD+ 1430$ = 1865$,0,Amapola,Complete Kit,Closed,False
+40,03/25/25,BusyBee,597311,1966,SO52940,,,Ex  3750+ 1200 +1500 =6450 $  (Invoice for 2700 $),597311,PHV0119,RO Assigned,RO660908,Action Aero,,1430.0,USD,1430$,0,Amapola,Kit without Flow Devider + 1 N FAIL,Closed,False
+41,08/13/24,Aerosum,42011,DL49,SO52941,,,Flate Rate Exchange,42011,AQ32,RO Assigned,RO660852,Aeg,,,,Flate Rate Exchange,0,Amapola,,Closed,False
+42,08/13/24,Aerosum,42011,AB25,SO52936,,,Flate Rate Exchange,42011,FH40,RO Assigned,RO660853,Aeg,,,,Flate Rate Exchange,0,Amapola,,Closed,False
+43,08/13/24,Aerosum,666000143,1397,SO52927,,,,666000143,83-88,RO Assigned,RO660855,Amapola,,,,,0,Amapola,,Closed,False
+44,02/25/25,CC&Sons,597311,PHM0140,SO52954,,,Exchange charge 3750+ fauly nozzle need to claim,597311,1XJ00107,RO Assigned,RO660909,Action Aero,,435.0,USD,435$+,1,Amapola,Complete Kit,Closed,False
+45,02/05/25,CC&Sons,597311,G0963,SO52954,1200.0,USD,3750 + 1200 $,597311,1RV07547,RO Assigned,RO660910,Action Aero,,435.0,USD,435$+ 1430 (1 nozzle fail),1,Amapola,Complete Kit,Closed,False
+46,08/13/24,Aerosum,666000143,1397,SO52927,,,Flate Rate Exchange,666000143,83-88,RO Assigned,RO660855,Inhouse,,,,Flate Rate Exchange,0,Amapola,,Closed,False
+47,02/25/25,Jetways,,,,,,,3244858-24,B15441V,RO Assigned,RO660899,,,,,UNDER INSPECTION,0,Jetways,,Open,False
+48,11/13/24,Sky Cap,,,,,,,791809-4-004,86112247,RO Assigned,RO660566,Collin,,,,3523.21€,0,Sky Cap,BER,Open,False
+49,10/30/24,Sky Cap,,,,,,,809575-2-004,0950-151,RO Assigned,RO660603,Collin,,,,3523.21€,0,Sky Cap,BER,Open,False
+50,04/08/25,BusyBee,170BC101-3,593,SO52967,3500.0,USD,3500$,170BC101-3,291,Exchange Received,,,,,,,0,Amapola,,Closed,False
+51,04/08/25,BusyBee,6607-1-87A,X72544X,SO52967,1800.0,USD,1800$,6607-1-87A,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+52,04/08/25,BusyBee,645110-1,125-138,SO52967,3500.0,USD,3500$,645110-1,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+53,04/28/25,Newworld Choices,1C27-5,10AE-169,SO52969,,,Inoice shared;valid for 30 days,1C27-5,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+54,09/04/25,Sky Cap,785804-3,,SO52993,6000.0,USD,6000$,785804-3,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+55,09/04/25,Sky Cap,SLZ7011A,HW1333C,SO52993,3000.0,USD,3000$,SLZ7011A,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+56,09/04/25,Sky Cap,071-01503-0201,22553,SO52993,3000.0,USD,3000$,071-01503-0201,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+57,08/14/25,Aerojet,8095351-1004,3103,SO52984,11000.0,USD,"11,000 $ Invoice shared with customer",8095351-1004,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+58,05/09/25,Kush,,,,,,,785720-7,910649,RO Assigned,RO661212,Global,shop price 26476 $,,,NO PRICE,0,Kush,,Open,False
+59,06/03/25,Newworld Choices,737852A,0532-0534,SO52974,79500.0,USD,79500 $,737852A,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+60,07/25/25,Amapola,737852A,CSD0206GEN0146,SO52980,72000.0,USD,72000 $,737852A,CSD0485GEN0489,RO Assigned,RO661513,Global,,,,,0,Aerojet,,Closed,False
+61,06/05/25,Tanzania,,,,16000.0,USD,16000$,5007996-1,MAY90-0634,RO Assigned,RO661274,Baltic,,,,NO PRICE,0,Tanzania,,Closed,False
+62,06/05/25,Tanzania,,,,16000.0,USD,16000$,5007996-1,OCT96-1239,RO Assigned,RO661272,Baltic,,,,NO PRICE,0,Tanzania,,Closed,False
+63,05/14/25,CC&Sons,170BC101-3,202,SO52972,5000.0,USD,5000 $,170BC101-3,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+64,06/05/25,Tanzania,,,,19000.0,USD,19000$,5007996-1,NOV99-1270,RO Assigned,RO661270,Baltic,,,,NO PRICE,0,Tanzania,,Closed,False
+65,06/02/25,Tanzania,,,,,,3750+ FD 1500+ 5*1200 NOZZLE = 11250,597311,1VR00126,RO Assigned,RO661252,Action Aero,5 NOZZLE + F.D FAIL,1430.0,USD,1430$,5,Amapola,WITHOUT F.D,Closed,False
+66,05/13/25,Kush,,,,,,,3244873-6,B15591V,RO Assigned,RO661223,Action Aero,Shop price 16104.70 $,,,NO PRICE,0,Kush,,Open,False
+67,05/09/25,Kush,,,,,,,785720-7,881120,RO Assigned,RO661214,Global,shop price 26476 $,,,NO PRICE,0,Kush,,Open,False
+68,05/09/25,Kush,,,,,,,785720-7,901035,RO Assigned,RO661213,Global,shop price 25054 $,,,NO PRICE,0,Kush,,Open,False
+69,04/29/25,CC&Sons,170BC101-3,1043,SO22970,,,5000,170BC101-3,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+70,05/09/25,Kush,,,,65000.0,USD,65000 $,737852A,CSD0456GEN0471,RO Assigned,RO661208,Aeg,shop price 53839 $,,,NO PRICE,0,Kush,,Open,False
+71,04/29/25,CC&Sons,1C27-5B,9AG105,SO22970,,,3000,1C27-5,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+72,09/04/25,Sky Cap,7008470-912,89020450,SO52993,10000.0,USD,10000$,7008470-912,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+73,04/08/25,BusyBee,597311,1TJ03897,SO52967,3750.0,USD,3750$ +1500+ 1200*2,597311,1AEA0932,RO Assigned,RO661251,Action Aero,2 N FAIL+ W.O  FD,,,,0,Amapola,waiting for EX FD from Busy bee,Closed,False
+74,04/08/25,BusyBee,597311,2PH00221,SO52967,3750.0,USD,3750$ +1500+ 1200*2,597311,G0983,RO Assigned,RO661250,Action Aero,2 N FAIL+ W.O  FD,,,,0,Amapola,waiting for EX FD from Busy bee,Closed,False
+75,06/05/25,Tanzania,,,,12500.0,USD,12500$,661002011,DRG1612-91,RO Assigned,RO661276,Vse,solinoid is Ok,7150.0,USD,7150$,0,Tanzania,,Closed,False
+76,09/08/25,BusyBee,,,,,,,066-50001-3404,8651,Received - awaiting RO,,,,,,,0,BusyBee,,Open,True
+77,09/08/25,BusyBee,,,,,,,457400GB1901,457400021601,Received - awaiting RO,,,,,,,0,BusyBee,,Open,True
+78,09/08/25,BusyBee,,,,,,,EADFI8317-411,863016,Received - awaiting RO,,,,,,,0,BusyBee,,Open,True
+79,08/27/25,Amapola,737852A,CSD0358GEN0561,SO52994,72000.0,USD,72000$,737852A,CSD0152GEN0155,RO Assigned,RO661514,Global,,,,,0,Aerojet,,Closed,False
+80,05/16/25,Tanzania,,,,9700.0,USD,9700$,5008269H,2011,RO Assigned,RO661225,Action Aero,,,,NO PRICE,0,Tanzania,,Closed,False
+81,05/16/25,Tanzania,,,,14000.0,USD,14000$,42011,DY57,RO Assigned,RO661226,Aeg,,2370.0,USD,2370$,0,Tanzania,,Closed,False
+82,01/19/25,Newworld Choices,597311,,,,,3750+1500,597311,10R03317,RO Assigned,RO661542,,,,,,0,Amapola,,Closed,False
+83,09/26/25,Newworld Choices,666000143,1321,SO52997,8800.0,USD,8800$,666000143,1280,Exchange Received,,,,,,,0,Amapola,,Closed,False
+84,07/31/25,Newworld Choices,7013788-807,93070588,SO52981,7000.0,USD,7000$ SHARED INVOICE,7013788-807,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+85,02/12/26,Newworld Choices,737852A,CSD272GEN0272,SO53032,72000.0,USD,72000$,737852A,CSD0411GEN0413,Received - awaiting RO,,,,,,,0,Amapola,,Open,True
+86,08/26/25,Orion,5009982D,1495,SO52990,8900.0,USD,8900 $ FOR EXHANGE,5009980D,1113,Exchange Received,,,,,,,0,Amapola,,Closed,False
+87,04/28/25,Newworld Choices,5009982D,5192,SO52969,12000.0,USD,12000$,5009982D,2187,Exchange Received,,,,,,,0,Amapola,,Closed,False
+88,09/23/25,CC&Sons,42011,DL29,SO52995,,,,42011,AW455  &   AW457,Exchange Received,,,,,,,0,Amapola,,Closed,False
+89,04/08/25,BusyBee,785804-3,900197,SO52967,8000.0,USD,8000$ (unit failed while installation),785804-3,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+90,08/26/25,BusyBee,785804-3,891227,SO52989,,,Already paid before,785804-3,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+91,11/06/25,Tanzania,2229765-2-A,055,SO53009,32000.0,USD,32000$,2229765-2-A,185,Exchange Received,,,,,,,0,Amapola,,Closed,False
+92,11/05/25,BusyBee,791809-4-004,89115603,SO53007,17500.0,USD,17500$,791809-4-004,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+93,02/18/25,Newworld Choices,066-50001-3404,8812,SO52959,,,12000,066-50001-3404,7221,Exchange Received,,,,,,,0,Amapola,,Closed,False
+94,01/19/25,Newworld Choices,597311,,,1500.0,USD,3750+1200+1500$,597311,OOOG0071,RO Assigned,RO661499,,,,,,0,Amapola,,Closed,False
+95,11/05/25,CC&Sons,10151N01T00,129AB,SO53005,,,Previous one failed,10151N01T00,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+96,01/09/26,BusyBee,791809-4-004,87043356,SO53025,,,Previous Exchange unit failed,791809-4-004,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+97,11/05/25,CC&Sons,661002011,DRG7394-91,SO53005,9000.0,USD,9000$,661002011,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+98,05/09/25,Kush,,,,,,,737852A,CSD0520GEN0530,RO Assigned,RO661209,Aeg,shop price 24187 $,,,NO PRICE,0,Kush,AMAPOLA TAKEN -THEY NOT PAID,Closed,False
+99,11/29/25,CC&Sons,30-1951-1,0046,SO53014,7000.0,USD,ALREDY PAID THIS AMOUNT 7000$,30-1951-1,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+100,08/26/25,CC&Sons,5009982D,1909,,,,Free of charge on our own aircraft,5009982E,5117,Exchange Received,,,,,,,0,Amapola,,Closed,False
+101,08/13/24,Aerosum,066-01171-3404,30052,SO52927,,,,066-50001-3404,7068,Exchange Received,,,,,,,0,Amapola,,Closed,False
+102,09/23/25,CC&Sons,42011,DL29,SO52996,10000.0,USD,10000$,42011,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+103,11/05/25,CC&Sons,597311,000B0949,SO53005,,,3750,597311,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+104,11/06/25,Tanzania,,,,,,,10839F,WA19517,RO Assigned,RO661654,Parker,,,,,0,,,Open,False
+105,04/09/26,CC&Sons,,,,,,,737852A,CSD0187GEN0186,Other,,Aeg,,,,,0,CC&Sons,,Open,False
+106,11/06/25,Tanzania,,,,,,,785804-3,880270,RO Assigned,RO661616,Allclear,,,,,0,,,Open,False
+107,11/05/25,CC&Sons,597311,1SN02008,SO53005,,,3750,597311,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+108,10/03/25,CC&Sons,100-601177-002,178,SO53000,4500.0,USD,4500$,100-601177-002,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+109,11/28/25,CC&Sons,785804-3,900193,SO53013,,,8000,785804-3,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+110,11/28/25,CC&Sons,666000143,45-87,SO53013,,,8800,666000143,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+111,11/05/25,CC&Sons,SEL0C29EC,647,SO53005,,,4500,SEL0C29EC,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+112,11/06/25,Tanzania,,,,,,,10181N01R00,293,RO Assigned,RO661611,Apf,,,,,0,,,Open,False
+113,11/05/25,CC&Sons,2100-4043-00,000668902,SO53005,,,16000,2100-4043-00,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
+114,10/03/25,CC&Sons,10151N01T00,321,SO53000,5100.0,USD,5100$,10151N01T00,,Waiting for Exchange Unit,,,,,,,0,Amapola,,Open,True
